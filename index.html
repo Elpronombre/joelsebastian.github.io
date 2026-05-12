@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Joel Sebastián — Creative Producer</title>
-<meta name="description" content="Joel Sebastián — Creative Producer based in Bogotá. International TV production, coordination, and live experience delivery across Europe and Latin America.">
+<title>Joel Sebastián — Productor Creativo</title>
+<meta name="description" content="Joel Sebastián — Productor Creativo con base en Bogotá. Producción televisiva internacional, coordinación y entrega de experiencias en vivo para Europa y Latinoamérica.">
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <style>
@@ -207,25 +207,20 @@ section { position: relative; z-index: 2; padding: var(--sp) 4rem; }
    Orbs are blurred radial gradients that drift slowly through 3D space,
    giving the dark hero depth, warmth, and life on small screens.        */
 .hero-mobile-bg {
-  display: none;                       /* hidden on desktop — WebGL handles it */
+  display: none;
   position: absolute; inset: 0; z-index: 0;
   background: var(--bg-dark);
   overflow: hidden;
 }
 @media(max-width: 768px) {
   .hero-mobile-bg  { display: block; }
-  /* Lower overlay on mobile so orbs shine through the darkness */
   .hero-overlay    { background: rgba(0,0,0,0.28); }
 }
-
-/* Base orb style — all orbs share this */
 .mob-orb {
   position: absolute;
   border-radius: 50%;
-  will-change: transform;              /* hint browser for smoother animation */
+  will-change: transform;
 }
-
-/* ORB 1 — Large blue-grey, anchors top area — most dominant */
 .mob-orb-1 {
   width: 85vw; height: 85vw;
   background: radial-gradient(circle, rgba(58,90,128,0.38) 0%, rgba(58,90,128,0.10) 45%, transparent 70%);
@@ -233,8 +228,6 @@ section { position: relative; z-index: 2; padding: var(--sp) 4rem; }
   filter: blur(52px);
   animation: orbFloat1 20s ease-in-out infinite;
 }
-
-/* ORB 2 — Medium warm gold, right side — subtle warmth */
 .mob-orb-2 {
   width: 60vw; height: 60vw;
   background: radial-gradient(circle, rgba(201,165,90,0.22) 0%, rgba(201,165,90,0.06) 50%, transparent 72%);
@@ -242,8 +235,6 @@ section { position: relative; z-index: 2; padding: var(--sp) 4rem; }
   filter: blur(45px);
   animation: orbFloat2 26s ease-in-out infinite;
 }
-
-/* ORB 3 — Small deep teal, bottom-left — adds depth */
 .mob-orb-3 {
   width: 50vw; height: 50vw;
   background: radial-gradient(circle, rgba(47,93,80,0.28) 0%, rgba(47,93,80,0.08) 50%, transparent 70%);
@@ -251,8 +242,6 @@ section { position: relative; z-index: 2; padding: var(--sp) 4rem; }
   filter: blur(48px);
   animation: orbFloat3 23s ease-in-out infinite;
 }
-
-/* ORB 4 — Medium blue, lower-right — balances composition */
 .mob-orb-4 {
   width: 45vw; height: 45vw;
   background: radial-gradient(circle, rgba(58,90,128,0.20) 0%, transparent 68%);
@@ -260,8 +249,6 @@ section { position: relative; z-index: 2; padding: var(--sp) 4rem; }
   filter: blur(40px);
   animation: orbFloat4 30s ease-in-out infinite;
 }
-
-/* ORB 5 — Large wide ellipse, center — ties everything together */
 .mob-orb-5 {
   width: 90vw; height: 50vw;
   background: radial-gradient(ellipse, rgba(201,165,90,0.07) 0%, transparent 65%);
@@ -269,8 +256,6 @@ section { position: relative; z-index: 2; padding: var(--sp) 4rem; }
   filter: blur(65px);
   animation: orbFloat5 35s ease-in-out infinite;
 }
-
-/* ── ORB KEYFRAMES — slow, organic, non-repeating feel ─────────────── */
 @keyframes orbFloat1 {
   0%,100% { transform: translate(0,0) scale(1); }
   25%     { transform: translate(7vw, 5vh) scale(1.07); }
@@ -332,23 +317,19 @@ section { position: relative; z-index: 2; padding: var(--sp) 4rem; }
   line-height: inherit; letter-spacing: inherit;
   pointer-events: none; opacity: 0;
 }
-/* Glitch fires every 2.5s — double flash for realism */
-.glitch::before { color: #e8203a; animation: glA 2.5s 0.8s infinite; }
-.glitch::after  { color: #00d4c0; animation: glB 2.5s 0.88s infinite; }
+.glitch::before { color: #e8203a; animation: glA 9s 3s infinite; }
+.glitch::after  { color: #00d4c0; animation: glB 9s 3.08s infinite; }
 @keyframes glA {
-  /* 0–64% = calm (1.6s) | 65–77% = two flashes (0.3s) | 77–100% = rest */
-  0%,64%,100%{opacity:0;transform:translate(0)}
-  65%{opacity:.58;transform:translate(-4px,0);clip-path:polygon(0 14%,100% 14%,100% 36%,0 36%)}
-  69%{opacity:0;transform:translate(0)}                  /* brief pause between flashes */
-  71%{opacity:.42;transform:translate(3px,0);clip-path:polygon(0 52%,100% 52%,100% 70%,0 70%)}
-  77%{opacity:0}
+  0%,94%,100%{opacity:0;transform:translate(0)}
+  94.5%{opacity:.45;transform:translate(-3px,0);clip-path:polygon(0 18%,100% 18%,100% 40%,0 40%)}
+  96%{opacity:.3;transform:translate(2px,0);clip-path:polygon(0 54%,100% 54%,100% 70%,0 70%)}
+  97%{opacity:0}
 }
 @keyframes glB {
-  0%,64%,100%{opacity:0;transform:translate(0)}
-  65%{opacity:.46;transform:translate(4px,0);clip-path:polygon(0 58%,100% 58%,100% 78%,0 78%)}
-  69%{opacity:0;transform:translate(0)}
-  71%{opacity:.32;transform:translate(-3px,0);clip-path:polygon(0 20%,100% 20%,100% 40%,0 40%)}
-  77%{opacity:0}
+  0%,94%,100%{opacity:0;transform:translate(0)}
+  94.5%{opacity:.35;transform:translate(3px,0);clip-path:polygon(0 58%,100% 58%,100% 76%,0 76%)}
+  96%{opacity:.25;transform:translate(-2px,0);clip-path:polygon(0 22%,100% 22%,100% 42%,0 42%)}
+  97%{opacity:0}
 }
 /* Brief §4: line-height 1.5, margin-top 20px on body text */
 .hero-sub {
@@ -755,11 +736,11 @@ footer {
 <nav id="nav">
   <a href="#hero" class="nav-logo">Joel Sebastián</a>
   <ul class="nav-links">
-    <li><a href="#works">Works</a></li>
-    <li><a href="#whatido">Services</a></li>
-    <li><a href="#about">About</a></li>
+    <li><a href="#works">Proyectos</a></li>
+    <li><a href="#whatido">Servicios</a></li>
+    <li><a href="#about">Sobre mí</a></li>
     <li><a href="#video-work">Video</a></li>
-    <li><a href="#contact">Contact</a></li>
+    <li><a href="#contact">Contacto</a></li>
   </ul>
 </nav>
 
@@ -778,20 +759,20 @@ footer {
     <div class="mob-orb mob-orb-4"></div>
     <div class="mob-orb mob-orb-5"></div>
   </div>
-  <div class="hero-eyebrow">Creative & Audiovisual Producer — Bogotá ↗ World</div>
+  <div class="hero-eyebrow">Productor Creativo y Audiovisual — Bogotá ↗ Mundo</div>
   <div class="hero-text-wrap">
     <h1 class="hero-name">
       <span class="glitch" data-text="JOEL">JOEL</span><br>
       <span class="itname">Sebastián</span>
     </h1>
-    <p class="hero-sub">Creative Producer delivering audiovisual content, digital projects, and live experiences with a strong focus on execution, efficiency, and visual impact.</p>
+    <p class="hero-sub">Productor Creativo especializado en contenido audiovisual, proyectos digitales y experiencias en vivo, con un enfoque sólido en ejecución, eficiencia e impacto visual.</p>
     <div class="hero-cta">
-      <a href="#works" class="btn-gold">View Productions</a>
-      <a href="#contact" class="btn-ghost">Get In Touch</a>
+      <a href="#works" class="btn-gold">Ver Producciones</a>
+      <a href="#contact" class="btn-ghost">Contáctame</a>
     </div>
   </div>
   <div class="hero-scroll"><div class="scroll-bar"></div><span class="scroll-txt">Scroll</span></div>
-  <div class="hero-side">International Productions 2024 / 2026</div>
+  <div class="hero-side">Producciones Internacionales 2024 / 2026</div>
 </section>
 
 <!-- TRANSITION: dark → light -->
@@ -802,24 +783,24 @@ footer {
   <div class="inner">
     <div class="works-head reveal">
       <div>
-        <div class="s-label on-light">Selected Productions</div>
-        <h2 class="s-title on-light">THE <em>WORK</em></h2>
+        <div class="s-label on-light">Producciones Seleccionadas</div>
+        <h2 class="s-title on-light">EL <em>TRABAJO</em></h2>
       </div>
-      <p class="works-intro">Selected projects across international production, digital content, and creative development.</p>
+      <p class="works-intro">Proyectos seleccionados en producción internacional, contenido digital y desarrollo creativo.</p>
     </div>
 
-    <div class="works-divider">↳ Acunmedya Production — International Reality TV — 2024 / 2026</div>
+    <div class="works-divider">↳ Producción Acunmedya — Reality TV Internacional — 2024 / 2026</div>
     <div class="works-grid">
       <div class="wcard reveal d1">
         <div class="wcard-top">
           <div class="wcard-num">#001</div>
           <div class="wcard-country">🇨🇿</div>
           <div class="wcard-title">Survivor Czech</div>
-          <div class="wcard-role">Reward Production Responsible</div>
-          <div class="wcard-desc">Coordinated reward logistics and on-set execution within a multi-episode international reality format.</div>
+          <div class="wcard-role">Responsable de Producción de Recompensas</div>
+          <div class="wcard-desc">Coordiné la logística de recompensas y la ejecución en set dentro de un formato de reality internacional de múltiples episodios.</div>
         </div>
         <div class="wcard-bottom">
-          <div class="wcard-tags"><span class="wtag">Execution</span><span class="wtag">Coordination</span><span class="wtag">High-pressure</span></div>
+          <div class="wcard-tags"><span class="wtag">Ejecución</span><span class="wtag">Coordinación</span><span class="wtag">Alta presión</span></div>
           <div class="wcard-arrow">↗</div>
         </div>
         <div class="wcard-bg">01</div>
@@ -829,11 +810,11 @@ footer {
           <div class="wcard-num">#002</div>
           <div class="wcard-country">🇩🇪</div>
           <div class="wcard-title">Exatlon Germany</div>
-          <div class="wcard-role">Reward Production Responsible</div>
-          <div class="wcard-desc">Supported fast-paced production workflows and coordinated reward execution within a high-performance competition environment.</div>
+          <div class="wcard-role">Responsable de Producción de Recompensas</div>
+          <div class="wcard-desc">Apoyé flujos de trabajo de producción acelerados y coordiné la ejecución de recompensas dentro de un entorno de competición de alto rendimiento.</div>
         </div>
         <div class="wcard-bottom">
-          <div class="wcard-tags"><span class="wtag">Performance Production</span><span class="wtag">Logistics</span><span class="wtag">Adaptability</span></div>
+          <div class="wcard-tags"><span class="wtag">Prod. de Alto Rendimiento</span><span class="wtag">Logística</span><span class="wtag">Adaptabilidad</span></div>
           <div class="wcard-arrow">↗</div>
         </div>
         <div class="wcard-bg">02</div>
@@ -843,11 +824,11 @@ footer {
           <div class="wcard-num">#003</div>
           <div class="wcard-country">🇷🇴</div>
           <div class="wcard-title">Tempting Fortune Romania</div>
-          <div class="wcard-role">Set Producer</div>
-          <div class="wcard-desc">Assisted in set production and on-site coordination during the launch of a new international TV format.</div>
+          <div class="wcard-role">Productor de Set</div>
+          <div class="wcard-desc">Asistí en la producción de set y coordinación en sitio durante el lanzamiento de un nuevo formato televisivo internacional.</div>
         </div>
         <div class="wcard-bottom">
-          <div class="wcard-tags"><span class="wtag">Set Production</span><span class="wtag">Logistics</span><span class="wtag">Execution</span></div>
+          <div class="wcard-tags"><span class="wtag">Producción en Set</span><span class="wtag">Logística</span><span class="wtag">Ejecución</span></div>
           <div class="wcard-arrow">↗</div>
         </div>
         <div class="wcard-bg">03</div>
@@ -857,37 +838,37 @@ footer {
           <div class="wcard-num">#004</div>
           <div class="wcard-country">🇩🇪</div>
           <div class="wcard-title">Survivor Germany</div>
-          <div class="wcard-role">Reward Production Responsible</div>
-          <div class="wcard-desc">Delivered reward-based production segments within a competitive reality format, ensuring timing and execution across daily shoots.</div>
+          <div class="wcard-role">Responsable de Producción de Recompensas</div>
+          <div class="wcard-desc">Entregué segmentos de producción basados en recompensas dentro de un formato de reality competitivo, asegurando tiempos y ejecución durante los rodajes diarios.</div>
         </div>
         <div class="wcard-bottom">
-          <div class="wcard-tags"><span class="wtag">Live Production</span><span class="wtag">Timing</span><span class="wtag">Team Coordination</span></div>
+          <div class="wcard-tags"><span class="wtag">Producción en Vivo</span><span class="wtag">Timing</span><span class="wtag">Coord. de Equipo</span></div>
           <div class="wcard-arrow">↗</div>
         </div>
         <div class="wcard-bg">04</div>
       </div>
     </div>
 
-    <div class="works-divider" style="margin-top:8px">↳ Independent Work — Bogotá, Colombia</div>
+    <div class="works-divider" style="margin-top:8px">↳ Trabajo Independiente — Bogotá, Colombia</div>
     <div class="works-grid works-grid--half">
       <div class="wcard reveal d3">
         <div class="wcard-top">
           <div class="wcard-num">#005</div>
           <div class="wcard-country">🇨🇴</div>
-          <div class="wcard-title">Idartes — Nidos Program</div>
-          <div class="wcard-role">Creative Producer & Event Production</div>
-          <div class="wcard-desc">Designed and executed cultural and artistic experiences for public audiences within Bogotá's institutional program.</div>
+          <div class="wcard-title">Idartes — Programa Nidos</div>
+          <div class="wcard-role">Productor Creativo y Producción de Eventos</div>
+          <div class="wcard-desc">Diseñé y ejecuté experiencias culturales y artísticas para el público general dentro del programa institucional de Bogotá.</div>
         </div>
         <div class="wcard-bottom">
-          <div class="wcard-tags"><span class="wtag">Event Production</span><span class="wtag">Creative Direction</span><span class="wtag">Public Engagement</span></div>
+          <div class="wcard-tags"><span class="wtag">Prod. de Eventos</span><span class="wtag">Dirección Creativa</span><span class="wtag">Participación Pública</span></div>
           <div class="wcard-arrow">↗</div>
         </div>
         <div class="wcard-bg">05</div>
       </div>
       <div class="wcard wcard--placeholder reveal d4">
         <div class="wcard-placeholder-inner">
-          <div class="wcard-num" style="font-size:.58rem">Next project</div>
-          <div style="font-size:.9rem;color:var(--text-gray-3);margin-top:.5rem;font-style:italic">In development</div>
+          <div class="wcard-num" style="font-size:.58rem">Próximo proyecto</div>
+          <div style="font-size:.9rem;color:var(--text-gray-3);margin-top:.5rem;font-style:italic">En desarrollo</div>
         </div>
       </div>
     </div>
@@ -901,29 +882,29 @@ footer {
 <section id="whatido">
   <div class="inner">
     <div class="reveal">
-      <div class="s-label on-dark">Capabilities</div>
-      <h2 class="s-title on-dark">WHAT <em>I DO</em></h2>
+      <div class="s-label on-dark">Capacidades</div>
+      <h2 class="s-title on-dark">LO QUE <em>HAGO</em></h2>
     </div>
     <div class="whatido-grid">
       <div class="wdo-card reveal d1">
         <div class="wdo-icon">📺</div>
-        <div class="wdo-title">Audiovisual Production</div>
-        <div class="wdo-desc">TV formats, digital content, and branded audiovisual projects from coordination to delivery.</div>
+        <div class="wdo-title">Producción Audiovisual</div>
+        <div class="wdo-desc">Formatos de televisión, contenido digital y proyectos audiovisuales de marca, desde la coordinación hasta la entrega.</div>
       </div>
       <div class="wdo-card reveal d2">
         <div class="wdo-icon">⚙️</div>
-        <div class="wdo-title">Production Coordination & Logistics</div>
-        <div class="wdo-desc">On-site execution, reward management, team coordination, and workflow structuring in fast-paced environments.</div>
+        <div class="wdo-title">Coordinación de Producción y Logística</div>
+        <div class="wdo-desc">Ejecución en set, gestión de recompensas, coordinación de equipos y estructuración de flujos de trabajo en entornos de alta exigencia.</div>
       </div>
       <div class="wdo-card reveal d3">
         <div class="wdo-icon">💡</div>
-        <div class="wdo-title">Creative Production & Concept Development</div>
-        <div class="wdo-desc">Translating concepts into structured production plans with clear visual and narrative direction.</div>
+        <div class="wdo-title">Producción Creativa y Desarrollo de Conceptos</div>
+        <div class="wdo-desc">Transformar ideas en planes de producción estructurados con dirección visual y narrativa clara.</div>
       </div>
       <div class="wdo-card reveal d4">
         <div class="wdo-icon">🎪</div>
-        <div class="wdo-title">Live & Event Production Support</div>
-        <div class="wdo-desc">On-site production management for live events, cultural programs, and public-facing experiences.</div>
+        <div class="wdo-title">Apoyo en Producción en Vivo y Eventos</div>
+        <div class="wdo-desc">Gestión de producción en sitio para eventos en vivo, programas culturales y experiencias de cara al público.</div>
       </div>
     </div>
   </div>
@@ -936,49 +917,49 @@ footer {
 <section id="about">
   <div class="about-grid">
     <div class="reveal">
-      <div class="s-label on-light">About</div>
-      <h2 class="s-title on-light">WHO <em>I AM</em></h2>
-      <p class="about-p">I am a <strong>Creative Producer</strong> based in Bogotá, Colombia, with experience in international television, digital content, and live production.</p>
-      <p class="about-p">I have worked on large-scale reality TV formats in collaboration with European broadcasters, contributing to <em>production coordination</em>, reward management, and on-site execution within fast-paced, multi-episode environments.</p>
-      <p class="about-p">My approach combines structured production management with strong visual awareness. I focus on translating ideas into clear workflows, efficient execution, and high-quality results — across television, digital content, and live experiences.</p>
-      <p class="about-p">Alongside my production work, I develop visual and motion-based projects that expand my understanding of digital storytelling and creative direction.</p>
-      <p class="about-p">Fluent in Spanish and English. Open to relocation. Available to work with production companies, creative agencies, and multidisciplinary teams.</p>
+      <div class="s-label on-light">Sobre mí</div>
+      <h2 class="s-title on-light">QUIÉN <em>SOY</em></h2>
+      <p class="about-p">Soy un <strong>Productor Creativo</strong> con base en Bogotá, Colombia, con experiencia en televisión internacional, contenido digital y producción en vivo.</p>
+      <p class="about-p">He trabajado en formatos de reality TV a gran escala en colaboración con cadenas de televisión europeas, contribuyendo en <em>coordinación de producción</em>, gestión de recompensas y ejecución en set, dentro de entornos de múltiples episodios y alta exigencia.</p>
+      <p class="about-p">Mi enfoque combina la gestión estructurada de producción con una fuerte conciencia visual. Me enfoco en traducir ideas en flujos de trabajo claros, ejecución eficiente y resultados de alta calidad — en televisión, contenido digital y experiencias en vivo.</p>
+      <p class="about-p">Paralelamente a mi trabajo de producción, desarrollo proyectos visuales y de movimiento que amplían mi comprensión del storytelling digital y la dirección creativa.</p>
+      <p class="about-p">Fluido en español e inglés. Disponible para reubicarse. Abierto a trabajar con productoras, agencias creativas y equipos multidisciplinarios.</p>
       <div class="skills-row reveal d2">
         <div class="scol">
-          <div class="scol-title">Production</div>
-          <div class="skill-item">Creative Production</div>
-          <div class="skill-item">Production Coordination</div>
-          <div class="skill-item">Reward Management</div>
-          <div class="skill-item">Set Production</div>
-          <div class="skill-item">Logistics & Execution</div>
+          <div class="scol-title">Producción</div>
+          <div class="skill-item">Producción Creativa</div>
+          <div class="skill-item">Coordinación de Producción</div>
+          <div class="skill-item">Gestión de Recompensas</div>
+          <div class="skill-item">Producción en Set</div>
+          <div class="skill-item">Logística y Ejecución</div>
         </div>
         <div class="scol">
-          <div class="scol-title">Creative</div>
-          <div class="skill-item">Audiovisual Direction</div>
-          <div class="skill-item">Art Direction</div>
+          <div class="scol-title">Creativo</div>
+          <div class="skill-item">Dirección Audiovisual</div>
+          <div class="skill-item">Dirección de Arte</div>
           <div class="skill-item">Motion Graphics</div>
-          <div class="skill-item">Photography</div>
-          <div class="skill-item">Visual Storytelling</div>
+          <div class="skill-item">Fotografía</div>
+          <div class="skill-item">Narrativa Visual</div>
         </div>
         <div class="scol">
-          <div class="scol-title">Professional</div>
-          <div class="skill-item">Cross-cultural Teams</div>
-          <div class="skill-item">Remote Collaboration</div>
-          <div class="skill-item">Deadline Workflows</div>
-          <div class="skill-item">Bilingual ES / EN</div>
-          <div class="skill-item">Open to Relocation</div>
+          <div class="scol-title">Profesional</div>
+          <div class="skill-item">Equipos Multiculturales</div>
+          <div class="skill-item">Colaboración Remota</div>
+          <div class="skill-item">Flujos con Deadline</div>
+          <div class="skill-item">Bilingüe ES / EN</div>
+          <div class="skill-item">Disponible para Reubicarse</div>
         </div>
       </div>
     </div>
     <div class="about-right reveal d3">
       <div class="stats">
-        <div><div class="stat-n">4</div><div class="stat-l">Intl. TV Formats</div></div>
-        <div><div class="stat-n">4</div><div class="stat-l">Cross-cultural Production</div></div>
-        <div><div class="stat-n">4+</div><div class="stat-l">Years Experience</div></div>
-        <div><div class="stat-n">2</div><div class="stat-l">Bilingual Workflow</div></div>
+        <div><div class="stat-n">4</div><div class="stat-l">Formatos de TV Intl.</div></div>
+        <div><div class="stat-n">4</div><div class="stat-l">Producción Multicultural</div></div>
+        <div><div class="stat-n">4+</div><div class="stat-l">Años de Experiencia</div></div>
+        <div><div class="stat-n">2</div><div class="stat-l">Flujo de Trabajo Bilingüe</div></div>
       </div>
       <div class="tools-wrap">
-        <div class="tools-lbl">Tools</div>
+        <div class="tools-lbl">Herramientas</div>
         <div class="tools-chips">
           <span class="chip">TouchDesigner</span>
           <span class="chip">Claude AI</span>
@@ -995,9 +976,9 @@ footer {
 <section id="video-work">
   <div class="inner">
     <div class="reveal">
-      <div class="s-label on-dark">Video Work</div>
-      <h2 class="s-title on-dark">SELECTED <em>VIDEO WORK</em></h2>
-      <p class="s-intro on-dark">Explorations in digital storytelling and real-time visual systems, combining motion design, creative coding, and narrative experimentation. Personal audiovisual projects exploring narrative, identity, and visual experimentation.</p>
+      <div class="s-label on-dark">Trabajo en Video</div>
+      <h2 class="s-title on-dark">VIDEO <em>SELECCIONADO</em></h2>
+      <p class="s-intro on-dark">Exploraciones en narrativa digital y sistemas visuales en tiempo real, combinando diseño de movimiento, programación creativa y experimentación narrativa. Proyectos audiovisuales personales que exploran la identidad, la narrativa y la experimentación visual.</p>
     </div>
     <div class="video-grid">
 
@@ -1005,14 +986,14 @@ footer {
         <div class="vcard-video">
           <div class="play-cover" data-src="https://www.youtube.com/embed/lolTUjE4-Vs?autoplay=1">
             <div class="play-icon"></div>
-            <span class="play-label">Play Video</span>
+            <span class="play-label">Reproducir</span>
           </div>
         </div>
         <div class="vcard-info">
           <div class="vcard-num">#V001</div>
           <div class="vcard-title">Immersion</div>
-          <div class="vcard-desc">A personal audiovisual project exploring digital identity, self-reflection, and the blurred line between perception and reality.</div>
-          <div class="vcard-tools"><span class="vtool">Narrative</span><span class="vtool">Identity</span><span class="vtool">2024</span></div>
+          <div class="vcard-desc">Un proyecto audiovisual personal que explora la identidad digital, la autoreflexión y la línea difusa entre percepción y realidad.</div>
+          <div class="vcard-tools"><span class="vtool">Narrativa</span><span class="vtool">Identidad</span><span class="vtool">2024</span></div>
         </div>
       </div>
 
@@ -1020,13 +1001,13 @@ footer {
         <div class="vcard-video">
           <div class="play-cover" data-src="https://www.youtube.com/embed/zwGHd7xUnMA?autoplay=1">
             <div class="play-icon"></div>
-            <span class="play-label">Play Video</span>
+            <span class="play-label">Reproducir</span>
           </div>
         </div>
         <div class="vcard-info">
           <div class="vcard-num">#V002</div>
           <div class="vcard-title">Letter to Words I Never Said</div>
-          <div class="vcard-desc">Glitch aesthetics and time perception — the present hidden in digital noise.</div>
+          <div class="vcard-desc">Estética glitch y percepción del tiempo — el presente oculto en el ruido digital.</div>
           <div class="vcard-tools"><span class="vtool">TouchDesigner</span><span class="vtool">Glitch</span><span class="vtool">2025</span></div>
         </div>
       </div>
@@ -1035,14 +1016,14 @@ footer {
         <div class="vcard-video">
           <div class="play-cover" data-src="https://www.youtube.com/embed/vmE1PyYxZMA?autoplay=1">
             <div class="play-icon"></div>
-            <span class="play-label">Play Video</span>
+            <span class="play-label">Reproducir</span>
           </div>
         </div>
         <div class="vcard-info">
           <div class="vcard-num">#V003</div>
           <div class="vcard-title">Dry on You</div>
-          <div class="vcard-desc">Generative visuals meeting personal narrative — migration, transformation, and resilience.</div>
-          <div class="vcard-tools"><span class="vtool">TouchDesigner</span><span class="vtool">Production</span><span class="vtool">2024</span></div>
+          <div class="vcard-desc">Visuales generativos y narrativa personal — migración, transformación y resiliencia.</div>
+          <div class="vcard-tools"><span class="vtool">TouchDesigner</span><span class="vtool">Producción</span><span class="vtool">2024</span></div>
         </div>
       </div>
 
@@ -1050,20 +1031,20 @@ footer {
         <div class="vcard-video">
           <div class="play-cover" data-src="https://www.youtube.com/embed/-jWIS646DiQ?autoplay=1">
             <div class="play-icon"></div>
-            <span class="play-label">Play Video</span>
+            <span class="play-label">Reproducir</span>
           </div>
         </div>
         <div class="vcard-info">
           <div class="vcard-num">#V004</div>
           <div class="vcard-title">Letter to Build It Up</div>
-          <div class="vcard-desc">Motion-based visual letter exploring growth, imperfection, and the process of becoming.</div>
+          <div class="vcard-desc">Carta visual en movimiento que explora el crecimiento, la imperfección y el proceso de convertirse.</div>
           <div class="vcard-tools"><span class="vtool">Motion</span><span class="vtool">Personal</span><span class="vtool">2025</span></div>
         </div>
       </div>
 
     </div>
     <div class="video-footer">
-      <a href="https://www.youtube.com/@El_pronombre" target="_blank" class="ch-link">▶ &nbsp;@El_pronombre — Full Channel</a>
+      <a href="https://www.youtube.com/@El_pronombre" target="_blank" class="ch-link">▶ &nbsp;@El_pronombre — Canal Completo</a>
     </div>
   </div>
 </section>
@@ -1075,27 +1056,27 @@ footer {
 <section id="contact">
   <div class="contact-inner">
     <div class="reveal">
-      <div class="s-label on-dark">Contact</div>
-      <h2 class="s-title on-dark">LET'S <em>CONNECT</em></h2>
+      <div class="s-label on-dark">Contacto</div>
+      <h2 class="s-title on-dark">CONECTEMOS</h2>
     </div>
     <div class="contact-grid">
       <div class="contact-headline reveal d1">
-        Available for<br>international<br>productions,<br><em>creative projects</em><br>&amp; live events.
+        Disponible para<br>producciones<br>internacionales,<br><em>proyectos creativos</em><br>y eventos en vivo.
       </div>
       <div class="c-rows reveal d3">
-        <div class="c-row"><span class="c-lbl">Email</span><a href="mailto:jbacu94@gmail.com" class="c-val">jbacu94@gmail.com</a></div>
+        <div class="c-row"><span class="c-lbl">Correo</span><a href="mailto:jbacu94@gmail.com" class="c-val">jbacu94@gmail.com</a></div>
         <div class="c-row"><span class="c-lbl">LinkedIn</span><a href="https://www.linkedin.com/in/baezjoel" target="_blank" class="c-val">linkedin.com/in/baezjoel</a></div>
         <div class="c-row"><span class="c-lbl">YouTube</span><a href="https://www.youtube.com/@El_pronombre" target="_blank" class="c-val">@El_pronombre</a></div>
-        <div class="c-row"><span class="c-lbl">Location</span><span class="c-val">Bogotá, Colombia — Open to Relocation</span></div>
-        <div class="c-row"><span class="c-lbl">Languages</span><span class="c-val">Spanish (Native) — English B2 IELTS</span></div>
+        <div class="c-row"><span class="c-lbl">Ubicación</span><span class="c-val">Bogotá, Colombia — Disponible para Reubicarse</span></div>
+        <div class="c-row"><span class="c-lbl">Idiomas</span><span class="c-val">Español (Nativo) — Inglés B2 IELTS</span></div>
       </div>
     </div>
   </div>
 </section>
 
 <footer>
-  <span class="f-l">© <span id="year"></span> Joel Sebastián — All rights reserved</span>
-  <span class="f-r">Crafted with Claude.</span>
+  <span class="f-l">© <span id="year"></span> Joel Sebastián — Todos los derechos reservados</span>
+  <span class="f-r">Hecho con Claude.</span>
 </footer>
 
 <script>
@@ -1178,166 +1159,173 @@ document.querySelectorAll('.play-cover').forEach(cover => {
 });
 
 /* ══════════════════════════════════════════════════════════════════════
-   ANIMATION: Floating Wireframe Cubes
-   28 cubes — varying sizes, blue-grey wireframe edges, slow rotation
-   and sinusoidal drift. EdgesGeometry keeps visual weight minimal so
-   they never compete with the text.
+   ANIMATION: Option C — Soft 3D Blob (MeshStandard, dark metallic)
+   Accent colour: #3A5A80 (blue-grey, per brief §2)
 
-   All previous performance rules still apply:
-   — 30fps cap | mobile disable | visibility pause | subtle mouse
+   RULES APPLIED:
+   §1  — Canvas only visible in dark sections (light bgs cover it)
+   §2  — Overlay rgba(0,0,0,0.45) — scene dimmed, text protected
+   §3  — Slow speed, no flashes, desaturated accent lights only
+   §4  — text-shadow on all hero elements, z-index: 3 on text
+   §5  — Layers: canvas(0) → overlay(1) → grain(2) → text(3)
+   §6  — Slow orbital lights, subtle rotation, minimal mouse reaction
+   §7  — Canvas hidden < 768px, CSS gradient fallback shown instead
+   §8  — Grain texture via .hero-grain (opacity:0.03, mix-blend:overlay)
 ══════════════════════════════════════════════════════════════════════ */
 (function () {
 
-  /* Mobile disable */
+  /* §7 — Mobile disable: skip WebGL entirely if narrow viewport */
   if (window.innerWidth < 768) {
     const c = document.getElementById('webgl');
     if (c) c.style.display = 'none';
     return;
   }
 
-  /* ── RENDERER ──────────────────────────────────────────────────────── */
+  /* ── RENDERER ──────────────────────────────────────────────────── */
   const canvas   = document.getElementById('webgl');
   const renderer = new THREE.WebGLRenderer({ canvas, antialias: false, alpha: false });
   renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.2));
   renderer.setSize(window.innerWidth, window.innerHeight);
   renderer.setClearColor(0x0A0A0A, 1);
-  renderer.shadowMap.enabled = false;
+  renderer.shadowMap.enabled = false; /* no shadows — saves GPU */
 
-  /* ── SCENE & CAMERA ────────────────────────────────────────────────── */
+  /* ── SCENE & CAMERA ────────────────────────────────────────────── */
   const scene  = new THREE.Scene();
-  scene.fog    = new THREE.FogExp2(0x0A0A0A, 0.013); /* fog fades far cubes naturally */
+  scene.fog    = new THREE.FogExp2(0x0A0A0A, 0.016);
   const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 200);
-  camera.position.set(0, 0, 42);
+  camera.position.set(0, 0, 38);
 
-  /* ── CUBE FACTORY ──────────────────────────────────────────────────── */
-  /*   Each cube uses EdgesGeometry (wireframe lines only) so it reads
-       as a delicate grid structure, not a solid object.
-       Color palette: blue-grey family matching accent #3A5A80.           */
-  const cubes  = [];
-  const COLORS  = [0x3A5A80, 0x2d4a6a, 0x486080, 0x3a5570, 0x526878];
-  const TOTAL   = 28;
+  /* ── BLOB GEOMETRY ─────────────────────────────────────────────── */
+  /*   IcosahedronGeometry(radius, detail)
+       detail 3 → ~640 vertices, smooth enough, low CPU cost
+       Positioned right-of-center so it frames the left-aligned text  */
+  const geo  = new THREE.IcosahedronGeometry(9, 3);
+  const orig = Float32Array.from(geo.attributes.position.array); /* store rest positions */
 
-  for (let i = 0; i < TOTAL; i++) {
-    /* Size tiers: a few large anchor cubes, many small ones for texture */
-    const tier = i < 4 ? 'large' : i < 10 ? 'medium' : 'small';
-    const size  = tier === 'large'  ? 1.4 + Math.random() * 0.8
-                : tier === 'medium' ? 0.7 + Math.random() * 0.6
-                :                     0.2 + Math.random() * 0.45;
+  /* §3 — Desaturated dark base: almost black with a cool blue undertone */
+  const mat = new THREE.MeshStandardMaterial({
+    color:     0x0d1118,   /* very dark blue-black */
+    metalness: 0.78,       /* metallic but not mirror */
+    roughness: 0.22,       /* slightly rough — matte-metallic feel */
+  });
 
-    const geo   = new THREE.BoxGeometry(size, size, size);
-    const edges = new THREE.EdgesGeometry(geo);
-    const mat   = new THREE.LineBasicMaterial({
-      color:       COLORS[Math.floor(Math.random() * COLORS.length)],
-      transparent: true,
-      /* Large cubes slightly more opaque so they anchor the composition  */
-      opacity: tier === 'large'  ? 0.18 + Math.random() * 0.14
-             : tier === 'medium' ? 0.10 + Math.random() * 0.12
-             :                     0.05 + Math.random() * 0.09,
-    });
+  const blob = new THREE.Mesh(geo, mat);
+  blob.position.set(9, 0, 0);  /* offset right — text lives on the left */
+  scene.add(blob);
 
-    const cube = new THREE.LineSegments(edges, mat);
+  /* ── LIGHTING — blue-grey accent only (brief §2: #3A5A80) ─────── */
+  /*   Key light — main source, cool blue-grey from upper-right       */
+  const keyLight = new THREE.DirectionalLight(0x3A5A80, 4.5);
+  keyLight.position.set(14, 10, 8);
+  scene.add(keyLight);
 
-    /* Scatter across scene volume — spread wide so cubes frame the text  */
-    cube.position.set(
-      (Math.random() - 0.5) * 78,
-      (Math.random() - 0.5) * 55,
-      (Math.random() - 0.5) * 40 - 10
-    );
+  /*   Rim light — very subtle warm gold from lower-left              */
+  /*   Prevents the blob reading as pure silhouette                   */
+  const rimLight = new THREE.DirectionalLight(0xC9A55A, 0.6);
+  rimLight.position.set(-10, -6, -4);
+  scene.add(rimLight);
 
-    /* Random starting rotation so no two cubes look the same */
-    cube.rotation.set(
-      Math.random() * Math.PI * 2,
-      Math.random() * Math.PI * 2,
-      Math.random() * Math.PI * 2
-    );
+  /*   Fill light — diffuse cool blue to lift shadow areas            */
+  const fillLight = new THREE.PointLight(0x1e2d42, 3.0, 70);
+  fillLight.position.set(-6, 8, 14);
+  scene.add(fillLight);
 
-    /* Per-cube animation parameters stored in userData */
-    cube.userData = {
-      /* Spin speeds — large cubes spin slower (more deliberate) */
-      rx: (Math.random() - 0.5) * (tier === 'large' ? 0.003 : 0.007),
-      ry: (Math.random() - 0.5) * (tier === 'large' ? 0.004 : 0.009),
-      rz: (Math.random() - 0.5) * (tier === 'large' ? 0.002 : 0.005),
-      /* Original position (oscillation origin) */
-      ox:    cube.position.x,
-      oy:    cube.position.y,
-      /* Phase offset makes every cube drift differently */
-      phase: Math.random() * Math.PI * 2,
-      /* Amplitude and speed of floating drift */
-      amp:   0.6 + Math.random() * 1.8,
-      spd:   0.15 + Math.random() * 0.35,
-    };
+  /*   Ambient — barely anything; keeps pure blacks from feeling dead  */
+  scene.add(new THREE.AmbientLight(0x060608, 1.8));
 
-    scene.add(cube);
-    cubes.push(cube);
-  }
-
-  /* ── BACKGROUND DUST ───────────────────────────────────────────────── */
-  /* Fine particles fill the space between cubes for atmospheric depth  */
-  const N = 500, dp = new Float32Array(N * 3);
+  /* ── SUBTLE BACKGROUND DUST (§3: not competing with the blob) ──── */
+  const N = 900; const dp = new Float32Array(N * 3);
   for (let i = 0; i < N; i++) {
-    dp[i*3]   = (Math.random() - .5) * 100;
+    dp[i*3]   = (Math.random() - .5) * 110;
     dp[i*3+1] = (Math.random() - .5) * 80;
-    dp[i*3+2] = (Math.random() - .5) * 55 - 18;
+    dp[i*3+2] = (Math.random() - .5) * 60 - 25;
   }
   const dg = new THREE.BufferGeometry();
   dg.setAttribute('position', new THREE.BufferAttribute(dp, 3));
   scene.add(new THREE.Points(dg, new THREE.PointsMaterial({
-    color: 0x506070, size: 0.042, transparent: true, opacity: 0.20,
-    blending: THREE.AdditiveBlending, depthWrite: false,
+    color: 0x6a7880, size: .055, transparent: true, opacity: .28,
+    blending: THREE.AdditiveBlending, depthWrite: false
   })));
 
-  /* ── MOUSE PARALLAX ────────────────────────────────────────────────── */
+  /* ── MOUSE PARALLAX (§6: very subtle) ──────────────────────────── */
   let mx = 0, my = 0, tx = 0, ty = 0;
   document.addEventListener('mousemove', e => {
     mx = (e.clientX / window.innerWidth  - .5) * 2;
     my = (e.clientY / window.innerHeight - .5) * 2;
   }, { passive: true });
 
-  /* ── 30 FPS CAP ────────────────────────────────────────────────────── */
-  const FPS = 30, FRAME_MS = 1000 / FPS;
-  let lastFrame = 0, running = true, time = 0;
+  /* ── 30 FPS CAP (brief §6 from previous rule set) ──────────────── */
+  const FPS       = 30;
+  const FRAME_MS  = 1000 / FPS;
+  let   lastFrame = 0;
+  let   running   = true;
+  let   time      = 0;
 
-  /* ── ANIMATION LOOP ────────────────────────────────────────────────── */
+  /* ── BLOB MORPH FUNCTION ────────────────────────────────────────── */
+  /*   Multi-frequency sine displacement along vertex normals
+       Produces a slow, organic breathing effect
+       §3: No sharp changes — frequencies are low, speed is slow       */
+  function morphBlob() {
+    const pos = geo.attributes.position.array;
+    for (let i = 0; i < pos.length; i += 3) {
+      const ox = orig[i], oy = orig[i + 1], oz = orig[i + 2];
+      const len = Math.sqrt(ox*ox + oy*oy + oz*oz) || 1;
+      /* Three overlapping sine waves at different frequencies & phases */
+      const n =
+        Math.sin(ox * 0.14 + time * 0.50) * Math.cos(oy * 0.12 + time * 0.35) * 0.55 +
+        Math.sin(oy * 0.18 + time * 0.65) * Math.cos(oz * 0.10 + time * 0.40) * 0.30 +
+        Math.cos(oz * 0.12 + time * 0.55) * Math.sin(ox * 0.16 + time * 0.28) * 0.15;
+      const d = n * 1.6; /* displacement magnitude — kept subtle */
+      pos[i]   = ox + (ox / len) * d;
+      pos[i+1] = oy + (oy / len) * d;
+      pos[i+2] = oz + (oz / len) * d;
+    }
+    geo.attributes.position.needsUpdate = true;
+    geo.computeVertexNormals(); /* recalculate normals so lighting updates with shape */
+  }
+
+  /* ── ANIMATION LOOP ─────────────────────────────────────────────── */
   function animate(now) {
     requestAnimationFrame(animate);
-    if (!running)                   return;
-    if (now - lastFrame < FRAME_MS) return;
+    if (!running)                 return; /* §6c pause on hidden tab */
+    if (now - lastFrame < FRAME_MS) return; /* §6a 30fps cap */
     lastFrame = now;
-    time += 0.004; /* slow global clock */
 
-    /* Spin and float each cube independently */
-    cubes.forEach(c => {
-      /* Continuous rotation on all 3 axes */
-      c.rotation.x += c.userData.rx;
-      c.rotation.y += c.userData.ry;
-      c.rotation.z += c.userData.rz;
+    /* §3: time step slow — everything moves at a deliberate pace */
+    time += 0.0035;
 
-      /* Sinusoidal float — x and y drift in slightly different rhythms   */
-      const ph  = c.userData.phase;
-      const sp  = c.userData.spd;
-      const amp = c.userData.amp;
-      c.position.x = c.userData.ox + Math.sin(time * sp       + ph) * amp;
-      c.position.y = c.userData.oy + Math.cos(time * sp * 0.7 + ph) * (amp * 0.6);
-    });
+    /* Blob morphs */
+    morphBlob();
 
-    /* Camera — gentle drift + subtle mouse lean */
-    tx += (mx * 1.8 - tx) * 0.02;
-    ty += (-my * 1.3 - ty) * 0.02;
-    camera.position.x = tx + Math.sin(time * 0.20) * 1.0;
-    camera.position.y = ty + Math.cos(time * 0.14) * 0.65;
-    camera.lookAt(0, 0, 0);
+    /* §3: very slow blob rotation — feels alive without being distracting */
+    blob.rotation.x += 0.0014;
+    blob.rotation.y += 0.0022;
+    blob.rotation.z += 0.0006;
+
+    /* §6: Subtle mouse parallax on blob and camera */
+    tx += (mx * 1.8 - tx) * 0.022;
+    ty += (-my * 1.2 - ty) * 0.022;
+    blob.position.x = 9  + tx * 0.6;
+    blob.position.y = 0  + ty * 0.4;
+    camera.position.x =   tx * 0.4 + Math.sin(time * 0.18) * 0.8;
+    camera.position.y =   ty * 0.3 + Math.cos(time * 0.12) * 0.5;
+    camera.lookAt(4, 0, 0); /* look slightly right — keeps blob centred in view */
+
+    /* Orbital key light — very slow, stays on blob */
+    const ka = time * 0.08;
+    keyLight.position.set(14 * Math.cos(ka), 10, 8 * Math.sin(ka));
 
     renderer.render(scene, camera);
   }
   requestAnimationFrame(animate);
 
-  /* Pause when tab is hidden */
+  /* §6c — Pause when tab is hidden, resume cleanly */
   document.addEventListener('visibilitychange', () => {
-    running = !document.hidden;
+    running   = !document.hidden;
     if (!document.hidden) lastFrame = 0;
   });
 
-  /* Resize handler */
+  /* Resize */
   window.addEventListener('resize', () => {
     if (window.innerWidth < 768) { canvas.style.display = 'none'; return; }
     canvas.style.display = '';
