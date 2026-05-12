@@ -1,0 +1,1352 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Joel Sebastián — Creative Producer</title>
+<meta name="description" content="Joel Sebastián — Creative Producer based in Bogotá. International TV production, coordination, and live experience delivery across Europe and Latin America.">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<style>
+
+/* ═══════════════════════════════════════════════════════════════════════
+   DESIGN TOKENS — HYBRID LIGHT / DARK SYSTEM
+═══════════════════════════════════════════════════════════════════════ */
+:root {
+  /* DARK MODE — cinematic identity */
+  --bg-dark:          #0A0A0A;
+  --bg-dark-alt:      #111111;
+  --bg-dark-card:     #161616;
+  --text-primary:     #FFFFFF;
+  --text-secondary:   rgba(255,255,255,0.85);
+  --text-tertiary:    rgba(255,255,255,0.55);
+  --border-dark:      rgba(255,255,255,0.08);
+  --border-dark-card: rgba(255,255,255,0.10);
+
+  /* LIGHT MODE — reading clarity */
+  --bg-light:         #F8F8F8;
+  --bg-light-alt:     #FFFFFF;
+  --text-dark:        #111111;
+  --text-gray-1:      #333333;
+  --text-gray-2:      #444444;
+  --text-gray-3:      #666666;
+  --text-gray-4:      #888888;
+  --border-light:     rgba(0,0,0,0.06);
+  --border-light-alt: rgba(0,0,0,0.10);
+
+  /* ACCENT — consistent across both modes */
+  --gold:             #C9A55A;
+  --gold-light:       #B8922A;   /* darker gold for light backgrounds */
+  --gold-glow:        rgba(201,165,90,0.15);
+
+  /* LAYOUT */
+  --max:  1100px;
+  --sp:   100px;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════
+   RESET & BASE
+═══════════════════════════════════════════════════════════════════════ */
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--bg-dark);
+  color: var(--text-primary);
+  font-family: 'Inter', sans-serif;
+  font-size: 16px;
+  line-height: 1.6;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3 {
+  font-family: 'Bebas Neue', sans-serif;
+  letter-spacing: 0.05em;
+  line-height: .92;
+}
+
+/* ── Canvas sits at z-index: 0 — always behind sections (z-index: 2) ── */
+/* Light sections (bg: #F8F8F8, z-index: 2) naturally cover the canvas  */
+/* Canvas is only visible through dark sections where bg is transparent  */
+#webgl { position: fixed; inset: 0; z-index: 0; pointer-events: none; }
+
+/* ═══════════════════════════════════════════════════════════════════════
+   SCROLL PROGRESS
+═══════════════════════════════════════════════════════════════════════ */
+#scroll-progress {
+  position: fixed; top: 0; left: 0; height: 2px; width: 0%;
+  background: var(--gold); z-index: 300;
+  transition: width .08s linear; pointer-events: none;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════
+   NAV
+═══════════════════════════════════════════════════════════════════════ */
+nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 200;
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 1.6rem 4rem;
+  transition: background .4s ease, border-color .4s ease, box-shadow .4s ease;
+}
+nav.scrolled-dark {
+  background: rgba(10,10,10,.96);
+  border-bottom: 1px solid var(--border-dark);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+}
+nav.scrolled-light {
+  background: rgba(248,248,248,.97);
+  border-bottom: 1px solid var(--border-light-alt);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  box-shadow: 0 1px 20px rgba(0,0,0,.06);
+}
+.nav-logo {
+  font-family: 'Space Mono', monospace; font-size: .62rem;
+  letter-spacing: .28em; text-transform: uppercase;
+  color: var(--text-primary); text-decoration: none;
+  opacity: 0; animation: fadeIn 1s 1.4s forwards;
+  transition: color .4s;
+}
+nav.scrolled-light .nav-logo { color: var(--text-dark); }
+.nav-links { display: flex; gap: 2.5rem; list-style: none; opacity: 0; animation: fadeIn 1s 1.6s forwards; }
+.nav-links a {
+  font-family: 'Space Mono', monospace; font-size: .6rem;
+  letter-spacing: .16em; text-transform: uppercase;
+  color: var(--text-tertiary); text-decoration: none; transition: color .3s;
+}
+.nav-links a:hover { color: var(--gold); }
+nav.scrolled-light .nav-links a { color: var(--text-gray-3); }
+nav.scrolled-light .nav-links a:hover { color: var(--gold-light); }
+
+/* ═══════════════════════════════════════════════════════════════════════
+   SECTION SHARED UTILITIES
+═══════════════════════════════════════════════════════════════════════ */
+section { position: relative; z-index: 2; padding: var(--sp) 4rem; }
+.inner  { max-width: var(--max); margin: 0 auto; }
+
+/* Section header — adapts to mode via .dark / .light classes */
+.s-label {
+  font-family: 'Space Mono', monospace; font-size: .6rem;
+  letter-spacing: .3em; text-transform: uppercase;
+  margin-bottom: .85rem;
+}
+.s-label.on-dark  { color: var(--gold); }
+.s-label.on-light { color: var(--gold-light); }
+
+.s-title { font-size: clamp(2.8rem, 5.5vw, 5rem); margin-bottom: 1.6rem; }
+.s-title.on-dark  { color: var(--text-primary); }
+.s-title.on-light { color: var(--text-dark); }
+.s-title em {
+  font-family: 'Inter', sans-serif; font-style: italic;
+  font-weight: 300; letter-spacing: .01em;
+}
+.s-title.on-dark  em { color: rgba(255,255,255,.28); }
+.s-title.on-light em { color: rgba(17,17,17,.28); }
+
+.s-intro {
+  font-size: 1rem; line-height: 1.75; max-width: 600px; margin-bottom: 3.5rem;
+}
+.s-intro.on-dark  { color: var(--text-tertiary); }
+.s-intro.on-light { color: var(--text-gray-2); }
+
+/* ═══════════════════════════════════════════════════════════════════════
+   GRADIENT TRANSITIONS BETWEEN SECTIONS
+   Creates the intentional dark ↔ light rhythm
+═══════════════════════════════════════════════════════════════════════ */
+.grad-to-light {
+  height: 80px; position: relative; z-index: 2;
+  background: linear-gradient(to bottom, var(--bg-dark), var(--bg-light));
+  pointer-events: none;
+}
+.grad-to-dark {
+  height: 80px; position: relative; z-index: 2;
+  background: linear-gradient(to bottom, var(--bg-light), var(--bg-dark));
+  pointer-events: none;
+}
+.grad-dark-to-dark {
+  height: 1px; position: relative; z-index: 2;
+  background: var(--border-dark);
+}
+
+/* ═══════════════════════════════════════════════════════════════════════
+   ① HERO — DARK / CINEMATIC
+═══════════════════════════════════════════════════════════════════════ */
+#hero {
+  position: relative; height: 100vh; z-index: 2;
+  display: flex; flex-direction: column; justify-content: flex-end;
+  padding: 0 4rem 5.5rem;
+  background: var(--bg-dark);
+}
+
+/* ── LAYER 0: Canvas (fixed, sits under everything) ─────────────────── */
+/* Already declared globally above — light section bgs cover it naturally */
+
+/* ── LAYER 1a: Cinematic overlay — dims the blob so text wins ─────────
+   Brief rule: rgba(0,0,0,0.45). We use 0.45 because the blob is already
+   dark — the overlay refines, not dominates.                            */
+.hero-overlay {
+  position: absolute; inset: 0;
+  background: rgba(0,0,0,0.45);
+  z-index: 1; pointer-events: none;
+}
+
+/* ── LAYER 1b: Grain texture — removes digital "flatness" ─────────────
+   Brief rule: opacity 0.03, mix-blend-mode: overlay                    */
+.hero-grain {
+  position: absolute; inset: 0; z-index: 2; pointer-events: none;
+  opacity: 0.03;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.92' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)'/%3E%3C/svg%3E");
+  animation: grain .35s steps(2) infinite;
+}
+
+/* ── MOBILE ANIMATION: 5-orb floating system ──────────────────────────
+   Replaces WebGL on phones — pure CSS, zero JS, zero performance cost.
+   Orbs are blurred radial gradients that drift slowly through 3D space,
+   giving the dark hero depth, warmth, and life on small screens.        */
+.hero-mobile-bg {
+  display: none;                       /* hidden on desktop — WebGL handles it */
+  position: absolute; inset: 0; z-index: 0;
+  background: var(--bg-dark);
+  overflow: hidden;
+}
+@media(max-width: 768px) {
+  .hero-mobile-bg  { display: block; }
+  /* Lower overlay on mobile so orbs shine through the darkness */
+  .hero-overlay    { background: rgba(0,0,0,0.28); }
+}
+
+/* Base orb style — all orbs share this */
+.mob-orb {
+  position: absolute;
+  border-radius: 50%;
+  will-change: transform;              /* hint browser for smoother animation */
+}
+
+/* ORB 1 — Large blue-grey, anchors top area — most dominant */
+.mob-orb-1 {
+  width: 85vw; height: 85vw;
+  background: radial-gradient(circle, rgba(58,90,128,0.38) 0%, rgba(58,90,128,0.10) 45%, transparent 70%);
+  top: -18%; left: 5%;
+  filter: blur(52px);
+  animation: orbFloat1 20s ease-in-out infinite;
+}
+
+/* ORB 2 — Medium warm gold, right side — subtle warmth */
+.mob-orb-2 {
+  width: 60vw; height: 60vw;
+  background: radial-gradient(circle, rgba(201,165,90,0.22) 0%, rgba(201,165,90,0.06) 50%, transparent 72%);
+  top: 20%; right: -18%;
+  filter: blur(45px);
+  animation: orbFloat2 26s ease-in-out infinite;
+}
+
+/* ORB 3 — Small deep teal, bottom-left — adds depth */
+.mob-orb-3 {
+  width: 50vw; height: 50vw;
+  background: radial-gradient(circle, rgba(47,93,80,0.28) 0%, rgba(47,93,80,0.08) 50%, transparent 70%);
+  bottom: 12%; left: -12%;
+  filter: blur(48px);
+  animation: orbFloat3 23s ease-in-out infinite;
+}
+
+/* ORB 4 — Medium blue, lower-right — balances composition */
+.mob-orb-4 {
+  width: 45vw; height: 45vw;
+  background: radial-gradient(circle, rgba(58,90,128,0.20) 0%, transparent 68%);
+  bottom: 30%; right: 5%;
+  filter: blur(40px);
+  animation: orbFloat4 30s ease-in-out infinite;
+}
+
+/* ORB 5 — Large wide ellipse, center — ties everything together */
+.mob-orb-5 {
+  width: 90vw; height: 50vw;
+  background: radial-gradient(ellipse, rgba(201,165,90,0.07) 0%, transparent 65%);
+  top: 38%; left: 5%;
+  filter: blur(65px);
+  animation: orbFloat5 35s ease-in-out infinite;
+}
+
+/* ── ORB KEYFRAMES — slow, organic, non-repeating feel ─────────────── */
+@keyframes orbFloat1 {
+  0%,100% { transform: translate(0,0) scale(1); }
+  25%     { transform: translate(7vw, 5vh) scale(1.07); }
+  50%     { transform: translate(3vw, 13vh) scale(0.93); }
+  75%     { transform: translate(-5vw, 7vh) scale(1.04); }
+}
+@keyframes orbFloat2 {
+  0%,100% { transform: translate(0,0) scale(1); }
+  30%     { transform: translate(-9vw, -11vh) scale(1.11); }
+  60%     { transform: translate(-13vw, 5vh) scale(0.90); }
+  80%     { transform: translate(-5vw, -5vh) scale(1.05); }
+}
+@keyframes orbFloat3 {
+  0%,100% { transform: translate(0,0) scale(1); }
+  35%     { transform: translate(11vw, -9vh) scale(1.13); }
+  65%     { transform: translate(17vw, -3vh) scale(0.87); }
+  85%     { transform: translate(7vw, -13vh) scale(1.06); }
+}
+@keyframes orbFloat4 {
+  0%,100% { transform: translate(0,0) scale(1); }
+  40%     { transform: translate(-7vw, -15vh) scale(1.16); }
+  70%     { transform: translate(-15vw, -5vh) scale(0.89); }
+}
+@keyframes orbFloat5 {
+  0%,100% { transform: translate(0,0) scale(1) rotate(0deg); }
+  33%     { transform: translate(4vw, -6vh) scale(1.08) rotate(8deg); }
+  66%     { transform: translate(-6vw, 4vh) scale(0.94) rotate(-5deg); }
+}
+
+/* ── LAYER 3: All text — above everything ──────────────────────────── */
+.hero-eyebrow, .hero-text-wrap, .hero-scroll, .hero-side {
+  position: relative; z-index: 3;
+}
+.hero-eyebrow {
+  font-family: 'Space Mono', monospace; font-size: .58rem;
+  letter-spacing: .32em; text-transform: uppercase; color: var(--gold);
+  margin-bottom: 1.6rem; opacity: 0; animation: fadeInUp .9s .4s forwards;
+  text-shadow: 0 2px 14px rgba(0,0,0,0.8);
+}
+.hero-text-wrap { max-width: 600px; margin-top: 20px; }
+/* Brief §4: text-shadow: 0px 4px 20px rgba(0,0,0,0.7) on all hero text */
+.hero-name {
+  font-size: clamp(5rem, 13vw, 12rem);
+  letter-spacing: .05em; color: var(--text-primary);
+  text-shadow: 0px 4px 20px rgba(0,0,0,0.7);
+  opacity: 0; animation: fadeInUp 1s .6s forwards;
+}
+.hero-name .itname {
+  font-family: 'Inter', sans-serif; font-style: italic;
+  font-weight: 300; font-size: .32em; letter-spacing: .04em;
+  color: rgba(255,255,255,.42); display: block;
+  text-shadow: 0 2px 14px rgba(0,0,0,0.8);
+}
+/* glitch effect */
+.glitch { position: relative; display: inline-block; }
+.glitch::before, .glitch::after {
+  content: attr(data-text); position: absolute; top: 0; left: 0;
+  font-family: inherit; font-size: inherit; font-weight: inherit;
+  line-height: inherit; letter-spacing: inherit;
+  pointer-events: none; opacity: 0;
+}
+/* Glitch fires every 2.5s — double flash for realism */
+.glitch::before { color: #e8203a; animation: glA 2.5s 0.8s infinite; }
+.glitch::after  { color: #00d4c0; animation: glB 2.5s 0.88s infinite; }
+@keyframes glA {
+  /* 0–64% = calm (1.6s) | 65–77% = two flashes (0.3s) | 77–100% = rest */
+  0%,64%,100%{opacity:0;transform:translate(0)}
+  65%{opacity:.58;transform:translate(-4px,0);clip-path:polygon(0 14%,100% 14%,100% 36%,0 36%)}
+  69%{opacity:0;transform:translate(0)}                  /* brief pause between flashes */
+  71%{opacity:.42;transform:translate(3px,0);clip-path:polygon(0 52%,100% 52%,100% 70%,0 70%)}
+  77%{opacity:0}
+}
+@keyframes glB {
+  0%,64%,100%{opacity:0;transform:translate(0)}
+  65%{opacity:.46;transform:translate(4px,0);clip-path:polygon(0 58%,100% 58%,100% 78%,0 78%)}
+  69%{opacity:0;transform:translate(0)}
+  71%{opacity:.32;transform:translate(-3px,0);clip-path:polygon(0 20%,100% 20%,100% 40%,0 40%)}
+  77%{opacity:0}
+}
+/* Brief §4: line-height 1.5, margin-top 20px on body text */
+.hero-sub {
+  font-size: clamp(.95rem, 1.5vw, 1.15rem); font-weight: 300;
+  color: rgba(255,255,255,.82); margin-top: 20px;
+  line-height: 1.5; letter-spacing: .015em;
+  text-shadow: 0 2px 14px rgba(0,0,0,0.8);
+  opacity: 0; animation: fadeInUp .9s 1s forwards;
+}
+.hero-cta {
+  display: flex; gap: 1.2rem; margin-top: 2.5rem;
+  opacity: 0; animation: fadeInUp .9s 1.2s forwards;
+}
+.btn-gold {
+  font-family: 'Space Mono', monospace; font-size: .6rem;
+  letter-spacing: .14em; text-transform: uppercase;
+  padding: .85rem 2rem; background: var(--gold); color: #0A0A0A;
+  font-weight: 700; text-decoration: none;
+  border-radius: 2px;
+  transition: background .3s, transform .25s cubic-bezier(.16,1,.3,1);
+}
+.btn-gold:hover { background: #e0bc7a; transform: translateY(-2px); }
+.btn-ghost {
+  font-family: 'Space Mono', monospace; font-size: .6rem;
+  letter-spacing: .14em; text-transform: uppercase;
+  padding: .85rem 2rem; border: 1px solid rgba(255,255,255,.18);
+  color: rgba(255,255,255,.7); text-decoration: none;
+  border-radius: 2px; transition: all .3s;
+}
+.btn-ghost:hover { border-color: var(--gold); color: var(--gold); transform: translateY(-2px); }
+.hero-scroll {
+  position: absolute; bottom: 3rem; right: 4rem; z-index: 3;
+  display: flex; align-items: center; gap: 1rem;
+  opacity: 0; animation: fadeIn 1s 1.8s forwards;
+}
+.scroll-bar {
+  width: 48px; height: 1px;
+  background: linear-gradient(to right, var(--gold), transparent);
+  animation: scrollPulse 2.5s ease-in-out infinite;
+}
+@keyframes scrollPulse { 0%,100%{width:48px;opacity:1} 50%{width:26px;opacity:.3} }
+.scroll-txt {
+  font-family: 'Space Mono', monospace; font-size: .48rem;
+  letter-spacing: .22em; text-transform: uppercase;
+  color: rgba(255,255,255,.35);
+}
+.hero-side {
+  position: absolute; top: 50%; right: 4rem; transform: translateY(-50%);
+  writing-mode: vertical-rl;
+  font-family: 'Space Mono', monospace; font-size: .48rem;
+  letter-spacing: .2em; text-transform: uppercase;
+  color: rgba(255,255,255,.25);
+  opacity: 0; animation: fadeIn 1s 2s forwards;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════
+   ② WORKS — LIGHT / READABLE
+═══════════════════════════════════════════════════════════════════════ */
+#works {
+  background: var(--bg-light);
+  padding: var(--sp) 4rem;
+}
+.works-head {
+  display: flex; justify-content: space-between; align-items: flex-end;
+  margin-bottom: 3rem; flex-wrap: wrap; gap: 1.5rem;
+}
+.works-intro {
+  font-size: .95rem; color: var(--text-gray-3);
+  max-width: 320px; line-height: 1.75; text-align: right;
+  font-style: italic;
+}
+.works-divider {
+  font-family: 'Space Mono', monospace; font-size: .52rem;
+  letter-spacing: .26em; text-transform: uppercase;
+  color: var(--text-gray-4);
+  padding: .65rem 0; border-bottom: 1px solid var(--border-light-alt);
+  margin-bottom: 1.5rem;
+}
+.works-grid {
+  display: grid; grid-template-columns: repeat(3,1fr);
+  gap: 20px; margin-bottom: 1.5rem;
+}
+.works-grid--half { grid-template-columns: repeat(2,1fr) !important; }
+
+/* ── LIGHT WORK CARD ────────────────────── */
+.wcard {
+  background: var(--bg-light-alt);
+  border-radius: 12px;
+  padding: 24px 28px;
+  border: 1px solid var(--border-light);
+  position: relative; overflow: hidden;
+  display: flex; flex-direction: column;
+  justify-content: space-between; min-height: 280px;
+  transition: transform .3s ease, box-shadow .3s ease, border-color .3s ease;
+}
+.wcard:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 30px rgba(0,0,0,.08);
+  border-color: rgba(0,0,0,.12);
+}
+/* gold accent bar */
+.wcard::before {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+  background: var(--gold-light); transform: scaleX(0); transform-origin: left;
+  transition: transform .4s ease; border-radius: 12px 12px 0 0;
+}
+.wcard:hover::before { transform: scaleX(1); }
+
+.wcard-top  { display: flex; flex-direction: column; gap: .3rem; }
+.wcard-num  { font-family: 'Space Mono', monospace; font-size: .48rem; letter-spacing: .22em; color: var(--gold-light); text-transform: uppercase; }
+.wcard-country { font-size: .85rem; margin-bottom: .1rem; }
+
+/* Typography hierarchy — EXPLICIT SIZES (brief rule §4) */
+.wcard-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1.85rem;  /* ~30px */
+  letter-spacing: .04em; color: var(--text-dark); line-height: 1;
+}
+.wcard-role {
+  font-size: 1rem;     /* ~16px */
+  font-weight: 500; color: var(--text-gray-1); line-height: 1.35;
+}
+.wcard-desc {
+  font-size: .88rem;   /* ~14px */
+  color: var(--text-gray-2); line-height: 1.65; margin-top: .5rem;
+}
+.wcard-bottom { display: flex; justify-content: space-between; align-items: flex-end; margin-top: 1.4rem; }
+.wcard-tags  { display: flex; gap: .28rem; flex-wrap: wrap; }
+.wtag {
+  font-family: 'Space Mono', monospace; font-size: .44rem;
+  letter-spacing: .05em; padding: .18rem .48rem;
+  border: 1px solid rgba(0,0,0,.1); color: var(--text-gray-3);  /* §4 focus color */
+  text-transform: uppercase; border-radius: 2px;
+  background: rgba(0,0,0,.025); transition: all .25s;
+}
+.wcard:hover .wtag { border-color: rgba(0,0,0,.18); color: var(--text-gray-2); }
+.wcard-arrow { font-size: .9rem; color: var(--text-gray-4); transition: color .3s, transform .3s; }
+.wcard:hover .wcard-arrow { color: var(--gold-light); transform: translate(3px,-3px); }
+.wcard-bg {
+  position: absolute; bottom: -1rem; right: 1.5rem;
+  font-family: 'Bebas Neue', sans-serif; font-size: 7rem;
+  color: rgba(0,0,0,.035); line-height: 1;
+  pointer-events: none; transition: color .35s;
+}
+.wcard:hover .wcard-bg { color: rgba(176,130,42,.06); }
+.wcard--placeholder {
+  align-items: center; justify-content: center;
+  opacity: .35; cursor: default; border-style: dashed;
+}
+.wcard-placeholder-inner { text-align: center; }
+
+/* ═══════════════════════════════════════════════════════════════════════
+   ③ WHAT I DO — DARK
+═══════════════════════════════════════════════════════════════════════ */
+#whatido { background: var(--bg-dark); }
+.whatido-grid {
+  display: grid; grid-template-columns: repeat(4,1fr);
+  gap: 1px; background: var(--border-dark);
+  border: 1px solid var(--border-dark); margin-top: 3rem;
+}
+.wdo-card {
+  background: var(--bg-dark-alt); padding: 2.5rem 2rem;
+  transition: background .3s, transform .3s cubic-bezier(.16,1,.3,1);
+}
+.wdo-card:hover { background: #1a1a1a; transform: translateY(-4px); }
+.wdo-icon  { font-size: 1.4rem; margin-bottom: 1.1rem; }
+.wdo-title {
+  font-family: 'Bebas Neue', sans-serif; font-size: 1.25rem;
+  letter-spacing: .05em; color: var(--text-primary);
+  margin-bottom: .6rem; line-height: 1.1;
+}
+.wdo-desc { font-size: .88rem; color: var(--text-tertiary); line-height: 1.65; }
+
+/* ═══════════════════════════════════════════════════════════════════════
+   ④ ABOUT — LIGHT / ULTRA LEGIBLE
+═══════════════════════════════════════════════════════════════════════ */
+#about { background: var(--bg-light); }
+.about-grid {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 6rem; align-items: start;
+  max-width: var(--max); margin: 0 auto;
+}
+
+/* About paragraphs — maximum legibility */
+.about-p {
+  font-size: 1rem; line-height: 1.85;
+  color: var(--text-gray-2); margin-bottom: 1.25rem;
+  max-width: 480px;
+}
+.about-p strong { color: var(--text-dark); font-weight: 600; }
+.about-p em     { font-style: italic; color: var(--gold-light); }
+
+/* Skills grid */
+.skills-row {
+  margin-top: 3rem; padding-top: 2.5rem;
+  border-top: 1px solid var(--border-light-alt);
+  display: grid; grid-template-columns: repeat(3,1fr); gap: 2rem;
+}
+.scol-title {
+  font-family: 'Space Mono', monospace; font-size: .52rem;
+  letter-spacing: .22em; text-transform: uppercase;
+  color: var(--gold-light); margin-bottom: 1.1rem;
+}
+.skill-item {
+  font-size: .9rem; color: var(--text-gray-3);
+  padding: .3rem 0; border-bottom: 1px solid rgba(0,0,0,.06);
+  transition: color .25s, padding-left .25s;
+}
+.skill-item:hover { color: var(--text-dark); padding-left: .35rem; }
+
+/* Stats */
+.about-right { padding-top: 1.5rem; }
+.stats {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 2.5rem 2rem; margin-bottom: 3rem;
+  padding-bottom: 3rem; border-bottom: 1px solid var(--border-light-alt);
+}
+.stat-n {
+  font-family: 'Bebas Neue', sans-serif; font-size: 4rem;
+  color: var(--gold-light); line-height: 1; letter-spacing: .02em;
+}
+.stat-l {
+  font-family: 'Space Mono', monospace; font-size: .48rem;
+  letter-spacing: .2em; text-transform: uppercase;
+  color: var(--text-gray-4); margin-top: .3rem; line-height: 1.55;
+}
+
+/* Tools */
+.tools-wrap { padding-top: 0; }
+.tools-lbl {
+  font-family: 'Space Mono', monospace; font-size: .5rem;
+  letter-spacing: .25em; text-transform: uppercase;
+  color: var(--gold-light); margin-bottom: 1.1rem;
+}
+.tools-chips { display: flex; flex-wrap: wrap; gap: .5rem; }
+.chip {
+  font-size: .88rem; color: var(--text-gray-3);
+  border: 1px solid var(--border-light-alt); padding: .3rem .85rem;
+  border-radius: 4px; background: var(--bg-light-alt);
+  transition: all .25s; cursor: default;
+}
+.chip:hover { color: var(--text-dark); border-color: rgba(0,0,0,.18); box-shadow: 0 2px 8px rgba(0,0,0,.06); }
+
+/* ═══════════════════════════════════════════════════════════════════════
+   ⑤ VIDEO WORK — DARK
+═══════════════════════════════════════════════════════════════════════ */
+#video-work { background: var(--bg-dark); }
+.video-grid {
+  display: grid; grid-template-columns: repeat(3,1fr);
+  gap: 24px; margin-top: 3rem;
+}
+
+/* Dark video card */
+.vcard {
+  background: var(--bg-dark-card);
+  border: 1px solid var(--border-dark-card);
+  border-radius: 12px; overflow: hidden;
+  transition: transform .3s ease, box-shadow .3s ease, border-color .3s ease;
+}
+.vcard:hover {
+  transform: scale(1.02);
+  box-shadow: 0 18px 50px rgba(0,0,0,.6);
+  border-color: rgba(255,255,255,.16);
+}
+.vcard-video { aspect-ratio: 16/9; overflow: hidden; background: #0d0d0d; position: relative; }
+.vcard-video iframe { width:100%; height:100%; border:none; display:block; }
+
+/* Click-to-play cover */
+.play-cover {
+  position: absolute; inset: 0;
+  background: var(--bg-dark-card);
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  gap: .85rem; cursor: pointer; transition: background .3s;
+}
+.play-cover:hover { background: #1c1c1c; }
+.play-icon {
+  width: 56px; height: 56px; border-radius: 50%;
+  background: var(--gold);
+  display: flex; align-items: center; justify-content: center;
+  transition: transform .3s cubic-bezier(.16,1,.3,1), background .3s;
+}
+.play-cover:hover .play-icon { transform: scale(1.1); background: #e0bc7a; }
+.play-icon::after {
+  content: ''; display: block; width: 0; height: 0;
+  border-left: 18px solid #0A0A0A;
+  border-top: 11px solid transparent;
+  border-bottom: 11px solid transparent;
+  margin-left: 5px;
+}
+.play-label {
+  font-family: 'Space Mono', monospace; font-size: .48rem;
+  letter-spacing: .2em; text-transform: uppercase;
+  color: var(--text-tertiary);
+}
+.vcard-info { padding: 1.5rem 1.75rem; }
+.vcard-num  { font-family:'Space Mono',monospace; font-size:.46rem; letter-spacing:.22em; color:var(--gold); text-transform:uppercase; margin-bottom:.4rem; }
+.vcard-title{ font-family:'Bebas Neue',sans-serif; font-size:1.35rem; letter-spacing:.04em; color:var(--text-primary); margin-bottom:.4rem; line-height:1.05; }
+.vcard-desc { font-size:.88rem; color:var(--text-tertiary); line-height:1.6; margin-bottom:.75rem; }
+.vcard-tools{ display:flex; gap:.3rem; flex-wrap:wrap; }
+.vtool { font-family:'Space Mono',monospace; font-size:.42rem; letter-spacing:.06em; padding:.14rem .42rem; border:1px solid var(--border-dark-card); color:var(--text-tertiary); text-transform:uppercase; border-radius:2px; }
+.video-footer {
+  margin-top: 3rem; padding-top: 2rem;
+  border-top: 1px solid var(--border-dark);
+  display: flex; justify-content: flex-end;
+}
+.ch-link {
+  display: inline-flex; align-items: center; gap: .75rem;
+  font-family: 'Space Mono', monospace; font-size: .58rem;
+  letter-spacing: .14em; text-transform: uppercase;
+  color: var(--gold); text-decoration: none;
+  border: 1px solid rgba(201,165,90,.35);
+  padding: .85rem 2rem; border-radius: 2px; transition: all .3s;
+}
+.ch-link:hover { background: var(--gold); color: var(--bg-dark); border-color: var(--gold); }
+
+/* ═══════════════════════════════════════════════════════════════════════
+   ⑥ CONTACT — DARK
+═══════════════════════════════════════════════════════════════════════ */
+#contact { background: var(--bg-dark); }
+.contact-inner { max-width: var(--max); margin: 0 auto; }
+.contact-grid {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 8rem; align-items: end; margin-top: 4rem;
+}
+.contact-headline {
+  font-size: clamp(3rem, 7vw, 6rem);
+  line-height: .9; color: var(--text-primary); letter-spacing: .04em;
+}
+.contact-headline em {
+  font-family: 'Inter', sans-serif; font-style: italic;
+  font-weight: 300; letter-spacing: .01em; color: var(--gold);
+}
+.c-rows { display: flex; flex-direction: column; }
+.c-row  { display: flex; flex-direction: column; gap: .25rem; padding: 1.35rem 0; border-bottom: 1px solid var(--border-dark); }
+.c-lbl  { font-family: 'Space Mono', monospace; font-size: .48rem; letter-spacing: .3em; text-transform: uppercase; color: var(--text-tertiary); }
+.c-val  { font-size: 1rem; color: var(--text-secondary); text-decoration: none; transition: color .3s; }
+.c-val:hover { color: var(--gold); }
+
+/* ═══════════════════════════════════════════════════════════════════════
+   FOOTER
+═══════════════════════════════════════════════════════════════════════ */
+footer {
+  padding: 1.75rem 4rem;
+  border-top: 1px solid var(--border-dark);
+  background: var(--bg-dark);
+  display: flex; justify-content: space-between; align-items: center;
+  position: relative; z-index: 2;
+}
+.f-l { font-family: 'Space Mono', monospace; font-size: .5rem; letter-spacing: .14em; text-transform: uppercase; color: var(--text-tertiary); }
+.f-r { font-size: .88rem; color: var(--text-tertiary); }
+
+/* ═══════════════════════════════════════════════════════════════════════
+   REVEAL ANIMATION
+═══════════════════════════════════════════════════════════════════════ */
+.reveal {
+  opacity: 0; transform: translateY(40px); filter: blur(4px);
+  transition:
+    opacity   .9s cubic-bezier(.16,1,.3,1),
+    transform .9s cubic-bezier(.16,1,.3,1),
+    filter    .7s cubic-bezier(.16,1,.3,1);
+}
+.reveal.on { opacity: 1; transform: none; filter: blur(0); }
+.d1{transition-delay:.08s} .d2{transition-delay:.18s} .d3{transition-delay:.3s}
+.d4{transition-delay:.42s} .d5{transition-delay:.56s}
+
+@keyframes fadeIn    { to   { opacity: 1; } }
+@keyframes fadeInUp  { from { opacity: 0; transform: translateY(28px); } to { opacity: 1; transform: none; } }
+
+/* ═══════════════════════════════════════════════════════════════════════
+   RESPONSIVE
+═══════════════════════════════════════════════════════════════════════ */
+@media(max-width: 960px) {
+  nav    { padding: 1.5rem; }
+  section{ padding: 64px 1.5rem; }
+  .nav-links { display: none; }
+  .hero-side, .hero-scroll { display: none; }
+  #hero  { padding: 0 1.5rem 4rem; }
+  .hero-text-wrap { max-width: 100%; }
+  .works-head { flex-direction: column; align-items: flex-start; }
+  .works-intro { text-align: left; max-width: 100%; }
+  .works-grid  { grid-template-columns: 1fr; gap: 16px; }
+  .works-grid--half { grid-template-columns: 1fr !important; }
+  .whatido-grid{ grid-template-columns: 1fr 1fr; }
+  .about-grid  { grid-template-columns: 1fr; gap: 3rem; }
+  .about-right { padding-top: 0; }
+  .skills-row  { grid-template-columns: 1fr; gap: 1.5rem; }
+  .video-grid  { grid-template-columns: 1fr; }
+  .contact-grid{ grid-template-columns: 1fr; gap: 3rem; margin-top: 2.5rem; }
+  footer       { flex-direction: column; gap: 1rem; text-align: center; }
+  .stats       { grid-template-columns: 1fr 1fr; }
+  .grad-to-light, .grad-to-dark { height: 48px; }
+}
+@media(max-width: 600px) {
+  .whatido-grid { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+<div id="scroll-progress"></div>
+<canvas id="webgl"></canvas>
+
+<!-- ══════════════════════════════════════════ NAV ══ -->
+<nav id="nav">
+  <a href="#hero" class="nav-logo">Joel Sebastián</a>
+  <ul class="nav-links">
+    <li><a href="#works">Works</a></li>
+    <li><a href="#whatido">Services</a></li>
+    <li><a href="#about">About</a></li>
+    <li><a href="#video-work">Video</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+</nav>
+
+<!-- ══════════════════════════════════════════ ① HERO (DARK) ══ -->
+<section id="hero">
+  <!-- Layer 0: Canvas renders behind (fixed, z-index:0) -->
+  <!-- Layer 1a: Dark overlay — dims scene so text wins -->
+  <div class="hero-overlay"></div>
+  <!-- Layer 1b: Grain texture — removes digital flatness (brief §8) -->
+  <div class="hero-grain"></div>
+  <!-- Layer 0 mobile: Animated orb system replaces WebGL on phones -->
+  <div class="hero-mobile-bg">
+    <div class="mob-orb mob-orb-1"></div>
+    <div class="mob-orb mob-orb-2"></div>
+    <div class="mob-orb mob-orb-3"></div>
+    <div class="mob-orb mob-orb-4"></div>
+    <div class="mob-orb mob-orb-5"></div>
+  </div>
+  <div class="hero-eyebrow">Creative & Audiovisual Producer — Bogotá ↗ World</div>
+  <div class="hero-text-wrap">
+    <h1 class="hero-name">
+      <span class="glitch" data-text="JOEL">JOEL</span><br>
+      <span class="itname">Sebastián</span>
+    </h1>
+    <p class="hero-sub">Creative Producer delivering audiovisual content, digital projects, and live experiences with a strong focus on execution, efficiency, and visual impact.</p>
+    <div class="hero-cta">
+      <a href="#works" class="btn-gold">View Productions</a>
+      <a href="#contact" class="btn-ghost">Get In Touch</a>
+    </div>
+  </div>
+  <div class="hero-scroll"><div class="scroll-bar"></div><span class="scroll-txt">Scroll</span></div>
+  <div class="hero-side">International Productions 2024 / 2026</div>
+</section>
+
+<!-- TRANSITION: dark → light -->
+<div class="grad-to-light"></div>
+
+<!-- ══════════════════════════════════════════ ② WORKS (LIGHT) ══ -->
+<section id="works">
+  <div class="inner">
+    <div class="works-head reveal">
+      <div>
+        <div class="s-label on-light">Selected Productions</div>
+        <h2 class="s-title on-light">THE <em>WORK</em></h2>
+      </div>
+      <p class="works-intro">Selected projects across international production, digital content, and creative development.</p>
+    </div>
+
+    <div class="works-divider">↳ Acunmedya Production — International Reality TV — 2024 / 2026</div>
+    <div class="works-grid">
+      <div class="wcard reveal d1">
+        <div class="wcard-top">
+          <div class="wcard-num">#001</div>
+          <div class="wcard-country">🇨🇿</div>
+          <div class="wcard-title">Survivor Czech</div>
+          <div class="wcard-role">Reward Production Responsible</div>
+          <div class="wcard-desc">Coordinated reward logistics and on-set execution within a multi-episode international reality format.</div>
+        </div>
+        <div class="wcard-bottom">
+          <div class="wcard-tags"><span class="wtag">Execution</span><span class="wtag">Coordination</span><span class="wtag">High-pressure</span></div>
+          <div class="wcard-arrow">↗</div>
+        </div>
+        <div class="wcard-bg">01</div>
+      </div>
+      <div class="wcard reveal d2">
+        <div class="wcard-top">
+          <div class="wcard-num">#002</div>
+          <div class="wcard-country">🇩🇪</div>
+          <div class="wcard-title">Exatlon Germany</div>
+          <div class="wcard-role">Reward Production Responsible</div>
+          <div class="wcard-desc">Supported fast-paced production workflows and coordinated reward execution within a high-performance competition environment.</div>
+        </div>
+        <div class="wcard-bottom">
+          <div class="wcard-tags"><span class="wtag">Performance Production</span><span class="wtag">Logistics</span><span class="wtag">Adaptability</span></div>
+          <div class="wcard-arrow">↗</div>
+        </div>
+        <div class="wcard-bg">02</div>
+      </div>
+      <div class="wcard reveal d3">
+        <div class="wcard-top">
+          <div class="wcard-num">#003</div>
+          <div class="wcard-country">🇷🇴</div>
+          <div class="wcard-title">Tempting Fortune Romania</div>
+          <div class="wcard-role">Set Producer</div>
+          <div class="wcard-desc">Assisted in set production and on-site coordination during the launch of a new international TV format.</div>
+        </div>
+        <div class="wcard-bottom">
+          <div class="wcard-tags"><span class="wtag">Set Production</span><span class="wtag">Logistics</span><span class="wtag">Execution</span></div>
+          <div class="wcard-arrow">↗</div>
+        </div>
+        <div class="wcard-bg">03</div>
+      </div>
+      <div class="wcard reveal d2">
+        <div class="wcard-top">
+          <div class="wcard-num">#004</div>
+          <div class="wcard-country">🇩🇪</div>
+          <div class="wcard-title">Survivor Germany</div>
+          <div class="wcard-role">Reward Production Responsible</div>
+          <div class="wcard-desc">Delivered reward-based production segments within a competitive reality format, ensuring timing and execution across daily shoots.</div>
+        </div>
+        <div class="wcard-bottom">
+          <div class="wcard-tags"><span class="wtag">Live Production</span><span class="wtag">Timing</span><span class="wtag">Team Coordination</span></div>
+          <div class="wcard-arrow">↗</div>
+        </div>
+        <div class="wcard-bg">04</div>
+      </div>
+    </div>
+
+    <div class="works-divider" style="margin-top:8px">↳ Independent Work — Bogotá, Colombia</div>
+    <div class="works-grid works-grid--half">
+      <div class="wcard reveal d3">
+        <div class="wcard-top">
+          <div class="wcard-num">#005</div>
+          <div class="wcard-country">🇨🇴</div>
+          <div class="wcard-title">Idartes — Nidos Program</div>
+          <div class="wcard-role">Creative Producer & Event Production</div>
+          <div class="wcard-desc">Designed and executed cultural and artistic experiences for public audiences within Bogotá's institutional program.</div>
+        </div>
+        <div class="wcard-bottom">
+          <div class="wcard-tags"><span class="wtag">Event Production</span><span class="wtag">Creative Direction</span><span class="wtag">Public Engagement</span></div>
+          <div class="wcard-arrow">↗</div>
+        </div>
+        <div class="wcard-bg">05</div>
+      </div>
+      <div class="wcard wcard--placeholder reveal d4">
+        <div class="wcard-placeholder-inner">
+          <div class="wcard-num" style="font-size:.58rem">Next project</div>
+          <div style="font-size:.9rem;color:var(--text-gray-3);margin-top:.5rem;font-style:italic">In development</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TRANSITION: light → dark -->
+<div class="grad-to-dark"></div>
+
+<!-- ══════════════════════════════════════════ ③ WHAT I DO (DARK) ══ -->
+<section id="whatido">
+  <div class="inner">
+    <div class="reveal">
+      <div class="s-label on-dark">Capabilities</div>
+      <h2 class="s-title on-dark">WHAT <em>I DO</em></h2>
+    </div>
+    <div class="whatido-grid">
+      <div class="wdo-card reveal d1">
+        <div class="wdo-icon">📺</div>
+        <div class="wdo-title">Audiovisual Production</div>
+        <div class="wdo-desc">TV formats, digital content, and branded audiovisual projects from coordination to delivery.</div>
+      </div>
+      <div class="wdo-card reveal d2">
+        <div class="wdo-icon">⚙️</div>
+        <div class="wdo-title">Production Coordination & Logistics</div>
+        <div class="wdo-desc">On-site execution, reward management, team coordination, and workflow structuring in fast-paced environments.</div>
+      </div>
+      <div class="wdo-card reveal d3">
+        <div class="wdo-icon">💡</div>
+        <div class="wdo-title">Creative Production & Concept Development</div>
+        <div class="wdo-desc">Translating concepts into structured production plans with clear visual and narrative direction.</div>
+      </div>
+      <div class="wdo-card reveal d4">
+        <div class="wdo-icon">🎪</div>
+        <div class="wdo-title">Live & Event Production Support</div>
+        <div class="wdo-desc">On-site production management for live events, cultural programs, and public-facing experiences.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TRANSITION: dark → light -->
+<div class="grad-to-light"></div>
+
+<!-- ══════════════════════════════════════════ ④ ABOUT (LIGHT) ══ -->
+<section id="about">
+  <div class="about-grid">
+    <div class="reveal">
+      <div class="s-label on-light">About</div>
+      <h2 class="s-title on-light">WHO <em>I AM</em></h2>
+      <p class="about-p">I am a <strong>Creative Producer</strong> based in Bogotá, Colombia, with experience in international television, digital content, and live production.</p>
+      <p class="about-p">I have worked on large-scale reality TV formats in collaboration with European broadcasters, contributing to <em>production coordination</em>, reward management, and on-site execution within fast-paced, multi-episode environments.</p>
+      <p class="about-p">My approach combines structured production management with strong visual awareness. I focus on translating ideas into clear workflows, efficient execution, and high-quality results — across television, digital content, and live experiences.</p>
+      <p class="about-p">Alongside my production work, I develop visual and motion-based projects that expand my understanding of digital storytelling and creative direction.</p>
+      <p class="about-p">Fluent in Spanish and English. Open to relocation. Available to work with production companies, creative agencies, and multidisciplinary teams.</p>
+      <div class="skills-row reveal d2">
+        <div class="scol">
+          <div class="scol-title">Production</div>
+          <div class="skill-item">Creative Production</div>
+          <div class="skill-item">Production Coordination</div>
+          <div class="skill-item">Reward Management</div>
+          <div class="skill-item">Set Production</div>
+          <div class="skill-item">Logistics & Execution</div>
+        </div>
+        <div class="scol">
+          <div class="scol-title">Creative</div>
+          <div class="skill-item">Audiovisual Direction</div>
+          <div class="skill-item">Art Direction</div>
+          <div class="skill-item">Motion Graphics</div>
+          <div class="skill-item">Photography</div>
+          <div class="skill-item">Visual Storytelling</div>
+        </div>
+        <div class="scol">
+          <div class="scol-title">Professional</div>
+          <div class="skill-item">Cross-cultural Teams</div>
+          <div class="skill-item">Remote Collaboration</div>
+          <div class="skill-item">Deadline Workflows</div>
+          <div class="skill-item">Bilingual ES / EN</div>
+          <div class="skill-item">Open to Relocation</div>
+        </div>
+      </div>
+    </div>
+    <div class="about-right reveal d3">
+      <div class="stats">
+        <div><div class="stat-n">4</div><div class="stat-l">Intl. TV Formats</div></div>
+        <div><div class="stat-n">4</div><div class="stat-l">Cross-cultural Production</div></div>
+        <div><div class="stat-n">4+</div><div class="stat-l">Years Experience</div></div>
+        <div><div class="stat-n">2</div><div class="stat-l">Bilingual Workflow</div></div>
+      </div>
+      <div class="tools-wrap">
+        <div class="tools-lbl">Tools</div>
+        <div class="tools-chips">
+          <span class="chip">TouchDesigner</span>
+          <span class="chip">Claude AI</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TRANSITION: light → dark -->
+<div class="grad-to-dark"></div>
+
+<!-- ══════════════════════════════════════════ ⑤ VIDEO WORK (DARK) ══ -->
+<section id="video-work">
+  <div class="inner">
+    <div class="reveal">
+      <div class="s-label on-dark">Video Work</div>
+      <h2 class="s-title on-dark">SELECTED <em>VIDEO WORK</em></h2>
+      <p class="s-intro on-dark">Explorations in digital storytelling and real-time visual systems, combining motion design, creative coding, and narrative experimentation. Personal audiovisual projects exploring narrative, identity, and visual experimentation.</p>
+    </div>
+    <div class="video-grid">
+
+      <div class="vcard reveal d1">
+        <div class="vcard-video">
+          <div class="play-cover" data-src="https://www.youtube.com/embed/lolTUjE4-Vs?autoplay=1">
+            <div class="play-icon"></div>
+            <span class="play-label">Play Video</span>
+          </div>
+        </div>
+        <div class="vcard-info">
+          <div class="vcard-num">#V001</div>
+          <div class="vcard-title">Immersion</div>
+          <div class="vcard-desc">A personal audiovisual project exploring digital identity, self-reflection, and the blurred line between perception and reality.</div>
+          <div class="vcard-tools"><span class="vtool">Narrative</span><span class="vtool">Identity</span><span class="vtool">2024</span></div>
+        </div>
+      </div>
+
+      <div class="vcard reveal d2">
+        <div class="vcard-video">
+          <div class="play-cover" data-src="https://www.youtube.com/embed/zwGHd7xUnMA?autoplay=1">
+            <div class="play-icon"></div>
+            <span class="play-label">Play Video</span>
+          </div>
+        </div>
+        <div class="vcard-info">
+          <div class="vcard-num">#V002</div>
+          <div class="vcard-title">Letter to Words I Never Said</div>
+          <div class="vcard-desc">Glitch aesthetics and time perception — the present hidden in digital noise.</div>
+          <div class="vcard-tools"><span class="vtool">TouchDesigner</span><span class="vtool">Glitch</span><span class="vtool">2025</span></div>
+        </div>
+      </div>
+
+      <div class="vcard reveal d3">
+        <div class="vcard-video">
+          <div class="play-cover" data-src="https://www.youtube.com/embed/vmE1PyYxZMA?autoplay=1">
+            <div class="play-icon"></div>
+            <span class="play-label">Play Video</span>
+          </div>
+        </div>
+        <div class="vcard-info">
+          <div class="vcard-num">#V003</div>
+          <div class="vcard-title">Dry on You</div>
+          <div class="vcard-desc">Generative visuals meeting personal narrative — migration, transformation, and resilience.</div>
+          <div class="vcard-tools"><span class="vtool">TouchDesigner</span><span class="vtool">Production</span><span class="vtool">2024</span></div>
+        </div>
+      </div>
+
+      <div class="vcard reveal d1">
+        <div class="vcard-video">
+          <div class="play-cover" data-src="https://www.youtube.com/embed/-jWIS646DiQ?autoplay=1">
+            <div class="play-icon"></div>
+            <span class="play-label">Play Video</span>
+          </div>
+        </div>
+        <div class="vcard-info">
+          <div class="vcard-num">#V004</div>
+          <div class="vcard-title">Letter to Build It Up</div>
+          <div class="vcard-desc">Motion-based visual letter exploring growth, imperfection, and the process of becoming.</div>
+          <div class="vcard-tools"><span class="vtool">Motion</span><span class="vtool">Personal</span><span class="vtool">2025</span></div>
+        </div>
+      </div>
+
+    </div>
+    <div class="video-footer">
+      <a href="https://www.youtube.com/@El_pronombre" target="_blank" class="ch-link">▶ &nbsp;@El_pronombre — Full Channel</a>
+    </div>
+  </div>
+</section>
+
+<!-- dark-to-dark thin separator -->
+<div class="grad-dark-to-dark"></div>
+
+<!-- ══════════════════════════════════════════ ⑥ CONTACT (DARK) ══ -->
+<section id="contact">
+  <div class="contact-inner">
+    <div class="reveal">
+      <div class="s-label on-dark">Contact</div>
+      <h2 class="s-title on-dark">LET'S <em>CONNECT</em></h2>
+    </div>
+    <div class="contact-grid">
+      <div class="contact-headline reveal d1">
+        Available for<br>international<br>productions,<br><em>creative projects</em><br>&amp; live events.
+      </div>
+      <div class="c-rows reveal d3">
+        <div class="c-row"><span class="c-lbl">Email</span><a href="mailto:jbacu94@gmail.com" class="c-val">jbacu94@gmail.com</a></div>
+        <div class="c-row"><span class="c-lbl">LinkedIn</span><a href="https://www.linkedin.com/in/baezjoel" target="_blank" class="c-val">linkedin.com/in/baezjoel</a></div>
+        <div class="c-row"><span class="c-lbl">YouTube</span><a href="https://www.youtube.com/@El_pronombre" target="_blank" class="c-val">@El_pronombre</a></div>
+        <div class="c-row"><span class="c-lbl">Location</span><span class="c-val">Bogotá, Colombia — Open to Relocation</span></div>
+        <div class="c-row"><span class="c-lbl">Languages</span><span class="c-val">Spanish (Native) — English B2 IELTS</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <span class="f-l">© <span id="year"></span> Joel Sebastián — All rights reserved</span>
+  <span class="f-r">Crafted with Claude.</span>
+</footer>
+
+<script>
+/* ── AUTO YEAR ───────────────────────────── */
+document.getElementById('year').textContent = new Date().getFullYear();
+
+/* ── SCROLL PROGRESS ─────────────────────── */
+const prog = document.getElementById('scroll-progress');
+window.addEventListener('scroll', () => {
+  const pct = window.scrollY / (document.documentElement.scrollHeight - window.innerHeight) * 100;
+  prog.style.width = pct + '%';
+}, {passive: true});
+
+/* ── ADAPTIVE NAV — switches class based on section background ───────── */
+const nav      = document.getElementById('nav');
+const darkSecs = ['hero','whatido','video-work','contact'];
+const lightSecs= ['works','about'];
+
+function updateNav() {
+  const y = window.scrollY + 80;
+  let mode = 'dark';
+  [...darkSecs, ...lightSecs].forEach(id => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    if (y >= el.offsetTop) mode = darkSecs.includes(id) ? 'dark' : 'light';
+  });
+  if (window.scrollY < 60) {
+    nav.classList.remove('scrolled-dark','scrolled-light'); return;
+  }
+  nav.classList.toggle('scrolled-dark',  mode === 'dark');
+  nav.classList.toggle('scrolled-light', mode === 'light');
+}
+window.addEventListener('scroll', updateNav, {passive: true});
+updateNav();
+
+/* ── SCROLL REVEAL ───────────────────────── */
+const ro = new IntersectionObserver(entries => {
+  entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('on'); ro.unobserve(e.target); } });
+}, {threshold: .07, rootMargin: '0px 0px -40px 0px'});
+document.querySelectorAll('.reveal').forEach(el => ro.observe(el));
+
+/* ── STAT COUNTER ────────────────────────── */
+function countUp(el, target, duration) {
+  const start  = performance.now();
+  const hasPlus = el.dataset.raw && el.dataset.raw.includes('+');
+  (function tick(now) {
+    const p    = Math.min((now - start) / duration, 1);
+    const ease = 1 - Math.pow(1 - p, 3);
+    el.textContent = Math.floor(ease * target) + (hasPlus ? '+' : '');
+    if (p < 1) requestAnimationFrame(tick);
+  })(start);
+}
+const statsBox = document.querySelector('.stats');
+if (statsBox) {
+  new IntersectionObserver(([e]) => {
+    if (e.isIntersecting) {
+      document.querySelectorAll('.stat-n').forEach(n => {
+        const raw = n.textContent.trim();
+        n.dataset.raw = raw;
+        const val = parseInt(raw);
+        if (!isNaN(val)) countUp(n, val, 1400);
+      });
+    }
+  }, {threshold: .5}).observe(statsBox);
+}
+
+/* ── VIDEO LAZY LOAD (click-to-play) ─────── */
+document.querySelectorAll('.play-cover').forEach(cover => {
+  cover.addEventListener('click', function() {
+    const src     = this.dataset.src;
+    const wrapper = this.parentElement;
+    const iframe  = document.createElement('iframe');
+    iframe.src           = src;
+    iframe.allow         = 'accelerometer;autoplay;clipboard-write;encrypted-media;gyroscope;picture-in-picture';
+    iframe.allowFullscreen = true;
+    iframe.style.cssText = 'width:100%;height:100%;border:none;display:block;position:absolute;inset:0';
+    wrapper.innerHTML    = '';
+    wrapper.appendChild(iframe);
+  });
+});
+
+/* ══════════════════════════════════════════════════════════════════════
+   ANIMATION: Floating Wireframe Cubes
+   28 cubes — varying sizes, blue-grey wireframe edges, slow rotation
+   and sinusoidal drift. EdgesGeometry keeps visual weight minimal so
+   they never compete with the text.
+
+   All previous performance rules still apply:
+   — 30fps cap | mobile disable | visibility pause | subtle mouse
+══════════════════════════════════════════════════════════════════════ */
+(function () {
+
+  /* Mobile disable */
+  if (window.innerWidth < 768) {
+    const c = document.getElementById('webgl');
+    if (c) c.style.display = 'none';
+    return;
+  }
+
+  /* ── RENDERER ──────────────────────────────────────────────────────── */
+  const canvas   = document.getElementById('webgl');
+  const renderer = new THREE.WebGLRenderer({ canvas, antialias: false, alpha: false });
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.2));
+  renderer.setSize(window.innerWidth, window.innerHeight);
+  renderer.setClearColor(0x0A0A0A, 1);
+  renderer.shadowMap.enabled = false;
+
+  /* ── SCENE & CAMERA ────────────────────────────────────────────────── */
+  const scene  = new THREE.Scene();
+  scene.fog    = new THREE.FogExp2(0x0A0A0A, 0.013); /* fog fades far cubes naturally */
+  const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 200);
+  camera.position.set(0, 0, 42);
+
+  /* ── CUBE FACTORY ──────────────────────────────────────────────────── */
+  /*   Each cube uses EdgesGeometry (wireframe lines only) so it reads
+       as a delicate grid structure, not a solid object.
+       Color palette: blue-grey family matching accent #3A5A80.           */
+  const cubes  = [];
+  const COLORS  = [0x3A5A80, 0x2d4a6a, 0x486080, 0x3a5570, 0x526878];
+  const TOTAL   = 28;
+
+  for (let i = 0; i < TOTAL; i++) {
+    /* Size tiers: a few large anchor cubes, many small ones for texture */
+    const tier = i < 4 ? 'large' : i < 10 ? 'medium' : 'small';
+    const size  = tier === 'large'  ? 1.4 + Math.random() * 0.8
+                : tier === 'medium' ? 0.7 + Math.random() * 0.6
+                :                     0.2 + Math.random() * 0.45;
+
+    const geo   = new THREE.BoxGeometry(size, size, size);
+    const edges = new THREE.EdgesGeometry(geo);
+    const mat   = new THREE.LineBasicMaterial({
+      color:       COLORS[Math.floor(Math.random() * COLORS.length)],
+      transparent: true,
+      /* Large cubes slightly more opaque so they anchor the composition  */
+      opacity: tier === 'large'  ? 0.18 + Math.random() * 0.14
+             : tier === 'medium' ? 0.10 + Math.random() * 0.12
+             :                     0.05 + Math.random() * 0.09,
+    });
+
+    const cube = new THREE.LineSegments(edges, mat);
+
+    /* Scatter across scene volume — spread wide so cubes frame the text  */
+    cube.position.set(
+      (Math.random() - 0.5) * 78,
+      (Math.random() - 0.5) * 55,
+      (Math.random() - 0.5) * 40 - 10
+    );
+
+    /* Random starting rotation so no two cubes look the same */
+    cube.rotation.set(
+      Math.random() * Math.PI * 2,
+      Math.random() * Math.PI * 2,
+      Math.random() * Math.PI * 2
+    );
+
+    /* Per-cube animation parameters stored in userData */
+    cube.userData = {
+      /* Spin speeds — large cubes spin slower (more deliberate) */
+      rx: (Math.random() - 0.5) * (tier === 'large' ? 0.003 : 0.007),
+      ry: (Math.random() - 0.5) * (tier === 'large' ? 0.004 : 0.009),
+      rz: (Math.random() - 0.5) * (tier === 'large' ? 0.002 : 0.005),
+      /* Original position (oscillation origin) */
+      ox:    cube.position.x,
+      oy:    cube.position.y,
+      /* Phase offset makes every cube drift differently */
+      phase: Math.random() * Math.PI * 2,
+      /* Amplitude and speed of floating drift */
+      amp:   0.6 + Math.random() * 1.8,
+      spd:   0.15 + Math.random() * 0.35,
+    };
+
+    scene.add(cube);
+    cubes.push(cube);
+  }
+
+  /* ── BACKGROUND DUST ───────────────────────────────────────────────── */
+  /* Fine particles fill the space between cubes for atmospheric depth  */
+  const N = 500, dp = new Float32Array(N * 3);
+  for (let i = 0; i < N; i++) {
+    dp[i*3]   = (Math.random() - .5) * 100;
+    dp[i*3+1] = (Math.random() - .5) * 80;
+    dp[i*3+2] = (Math.random() - .5) * 55 - 18;
+  }
+  const dg = new THREE.BufferGeometry();
+  dg.setAttribute('position', new THREE.BufferAttribute(dp, 3));
+  scene.add(new THREE.Points(dg, new THREE.PointsMaterial({
+    color: 0x506070, size: 0.042, transparent: true, opacity: 0.20,
+    blending: THREE.AdditiveBlending, depthWrite: false,
+  })));
+
+  /* ── MOUSE PARALLAX ────────────────────────────────────────────────── */
+  let mx = 0, my = 0, tx = 0, ty = 0;
+  document.addEventListener('mousemove', e => {
+    mx = (e.clientX / window.innerWidth  - .5) * 2;
+    my = (e.clientY / window.innerHeight - .5) * 2;
+  }, { passive: true });
+
+  /* ── 30 FPS CAP ────────────────────────────────────────────────────── */
+  const FPS = 30, FRAME_MS = 1000 / FPS;
+  let lastFrame = 0, running = true, time = 0;
+
+  /* ── ANIMATION LOOP ────────────────────────────────────────────────── */
+  function animate(now) {
+    requestAnimationFrame(animate);
+    if (!running)                   return;
+    if (now - lastFrame < FRAME_MS) return;
+    lastFrame = now;
+    time += 0.004; /* slow global clock */
+
+    /* Spin and float each cube independently */
+    cubes.forEach(c => {
+      /* Continuous rotation on all 3 axes */
+      c.rotation.x += c.userData.rx;
+      c.rotation.y += c.userData.ry;
+      c.rotation.z += c.userData.rz;
+
+      /* Sinusoidal float — x and y drift in slightly different rhythms   */
+      const ph  = c.userData.phase;
+      const sp  = c.userData.spd;
+      const amp = c.userData.amp;
+      c.position.x = c.userData.ox + Math.sin(time * sp       + ph) * amp;
+      c.position.y = c.userData.oy + Math.cos(time * sp * 0.7 + ph) * (amp * 0.6);
+    });
+
+    /* Camera — gentle drift + subtle mouse lean */
+    tx += (mx * 1.8 - tx) * 0.02;
+    ty += (-my * 1.3 - ty) * 0.02;
+    camera.position.x = tx + Math.sin(time * 0.20) * 1.0;
+    camera.position.y = ty + Math.cos(time * 0.14) * 0.65;
+    camera.lookAt(0, 0, 0);
+
+    renderer.render(scene, camera);
+  }
+  requestAnimationFrame(animate);
+
+  /* Pause when tab is hidden */
+  document.addEventListener('visibilitychange', () => {
+    running = !document.hidden;
+    if (!document.hidden) lastFrame = 0;
+  });
+
+  /* Resize handler */
+  window.addEventListener('resize', () => {
+    if (window.innerWidth < 768) { canvas.style.display = 'none'; return; }
+    canvas.style.display = '';
+    camera.aspect = window.innerWidth / window.innerHeight;
+    camera.updateProjectionMatrix();
+    renderer.setSize(window.innerWidth, window.innerHeight);
+  });
+
+})();
+</script>
+</body>
+</html>
